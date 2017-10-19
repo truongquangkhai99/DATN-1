@@ -3,11 +3,11 @@
 <%@page session="true"%>
 <!DOCTYPE html >
 <html>
-    <head>
-        <title>Giảng viên</title>
-        <link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
-        <link type="text/css" href="/css/app.css" rel="stylesheet" />
-    </head>
+	<head>
+		<title>Giảng viên</title>
+		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
+		<link type="text/css" href="/css/app.css" rel="stylesheet" />
+	</head>
 <body>
 	<h1>Title : ${title}</h1>
 
@@ -27,7 +27,7 @@
 			Welcome : ${pageContext.request.userPrincipal.name} | <a href="javascript:formSubmit()"> Logout</a>
 		</h2>
 	</c:if>
-    <script type="application/javascript" src="js/jquery.js"></script>
-    <script type="application/javascript" src="js/bootstrap.js"></script>
+	<script type="application/javascript" src="js/jquery.js"></script>
+	<script type="application/javascript" src="js/bootstrap.js"></script>
 </body>
 </html>

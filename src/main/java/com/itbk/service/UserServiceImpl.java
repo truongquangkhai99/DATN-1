@@ -14,21 +14,21 @@ import java.util.List;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    @Qualifier("sessionFactory")
-    private SessionFactory sessionFactory;
+	@Autowired
+	@Qualifier("sessionFactory")
+	private SessionFactory sessionFactory;
 
-    @SuppressWarnings("unchecked")
-    public User findByUserName(String username) {
-        List<User> users = new ArrayList<>();
+	@SuppressWarnings("unchecked")
+	public User findByUserName(String username) {
+		List<User> users = new ArrayList<>();
 
-        users = sessionFactory.getCurrentSession().createQuery("from User where username=?").
-                setParameter(0, username).list();
+		users = sessionFactory.getCurrentSession().createQuery("from User where username=?").
+				setParameter(0, username).list();
 
-        if (users.size() > 0) {
-            return users.get(0);
-        } else {
-            return null;
-        }
-    }
+		if (users.size() > 0) {
+			return users.get(0);
+		} else {
+			return null;
+		}
+	}
 }

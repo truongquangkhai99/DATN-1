@@ -3,11 +3,11 @@
 <%@page session="true"%>
 <!DOCTYPE html >
 <html>
-    <head>
-        <title>Lỗi</title>
-        <link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
-        <link type="text/css" href="/css/app.css" rel="stylesheet" />
-    </head>
+	<head>
+		<title>Lỗi</title>
+		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
+		<link type="text/css" href="/css/app.css" rel="stylesheet" />
+	</head>
 <body>
 	<h1>HTTP Status 403 - Access is denied</h1>
 
@@ -20,7 +20,7 @@
 		</c:otherwise>
 	</c:choose>
 
-    <script type="application/javascript" src="js/jquery.js"></script>
-    <script type="application/javascript" src="js/bootstrap.js"></script>
+	<script type="application/javascript" src="js/jquery.js"></script>
+	<script type="application/javascript" src="js/bootstrap.js"></script>
 </body>
 </html>

@@ -24,51 +24,51 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean("sessionFactory")
-    public SessionFactory sessionFactory(HibernateEntityManagerFactory hemf){
-        return hemf.getSessionFactory();
-    }
+	@Bean("sessionFactory")
+	public SessionFactory sessionFactory(HibernateEntityManagerFactory hemf){
+		return hemf.getSessionFactory();
+	}
 
 
-    @Autowired
-    @Qualifier("userDetailsService")
-    private UserDetailsService userDetailsService;
+	@Autowired
+	@Qualifier("userDetailsService")
+	private UserDetailsService userDetailsService;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Autowired
-    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
-        auth.authenticationProvider(authenticationProvider());
-    }
+	@Autowired
+	public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService);
+		auth.authenticationProvider(authenticationProvider());
+	}
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-//        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
+	@Bean
+	public DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+		authenticationProvider.setUserDetailsService(userDetailsService);
+//		authenticationProvider.setPasswordEncoder(passwordEncoder());
+		return authenticationProvider;
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-            .antMatchers("admin/**")
-            .access("hasRole('ROLE_ADMIN')")
-            .antMatchers("student/**")
-            .access("hasRole('ROLE_STUDENT')")
-            .antMatchers("teacher/**")
-            .access("hasRole('ROLE_TEACHER')")
-            .and().formLogin()
-            .loginPage("/login").failureUrl("/login?error")
-            .usernameParameter("username")
-            .passwordParameter("password")
-            .and().logout().logoutSuccessUrl("/login?logout")
-            .and().csrf()
-            .and().exceptionHandling().accessDeniedPage("/403");
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+			.antMatchers("admin/**")
+			.access("hasRole('ROLE_ADMIN')")
+			.antMatchers("student/**")
+			.access("hasRole('ROLE_STUDENT')")
+			.antMatchers("teacher/**")
+			.access("hasRole('ROLE_TEACHER')")
+			.and().formLogin()
+			.loginPage("/login").failureUrl("/login?error")
+			.usernameParameter("username")
+			.passwordParameter("password")
+			.and().logout().logoutSuccessUrl("/login?logout")
+			.and().csrf()
+			.and().exceptionHandling().accessDeniedPage("/403");
+	}
 
 }
