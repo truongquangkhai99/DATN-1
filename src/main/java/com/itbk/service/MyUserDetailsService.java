@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.itbk.model.UserRole;
-import com.itbk.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
