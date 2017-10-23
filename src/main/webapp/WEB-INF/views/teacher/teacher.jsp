@@ -10,7 +10,15 @@
 	</head>
 <body>
 	<h1>Title : ${title}</h1>
+	<c:if test="${pageContext.request.userPrincipal.name != null}">
+		<% if (!request.isUserInRole("TEACHER")) { %>
+			<% response.sendRedirect("/403"); %>
+		<% } %>
+	</c:if>
 
+	<c:if test="${pageContext.request.userPrincipal.name == null}">
+		<% response.sendRedirect("/login"); %>
+	</c:if>
 	<c:url value="/logout" var="logoutUrl" />
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"
@@ -21,12 +29,11 @@
 			document.getElementById("logoutForm").submit();
 		}
 	</script>
-
-	<c:if test="${pageContext.request.userPrincipal.name != null}">
+		<button class="btn btn-primary"><a id="bt-login" href="/teacher/create">Tạo nhóm thi</a></button>
 		<h2>
-			Welcome : ${pageContext.request.userPrincipal.name} | <a href="javascript:formSubmit()"> Logout</a>
+			<a href="javascript:formSubmit()"> Logout</a>
 		</h2>
-	</c:if>
+
 	<script type="application/javascript" src="js/jquery.js"></script>
 	<script type="application/javascript" src="js/bootstrap.js"></script>
 </body>

@@ -4,38 +4,37 @@
 <!DOCTYPE html >
 <html>
 	<head>
-		<title>Quản trị</title>
+		<title>Tạo nhóm sinh viên</title>
 		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
 	</head>
 <body>
-	<h1>Title : ${title}</h1>
 	<c:if test="${pageContext.request.userPrincipal.name != null}">
-		<% if (!request.isUserInRole("ADMIN")) { %>
-           <% response.sendRedirect("/403"); %>
-        <% } %>
+		<% if (!request.isUserInRole("TEACHER")) { %>
+			<% response.sendRedirect("/403"); %>
+		<% } %>
 	</c:if>
 
 	<c:if test="${pageContext.request.userPrincipal.name == null}">
 		<% response.sendRedirect("/login"); %>
 	</c:if>
-	<c:url value="/logout" var="logoutUrl" />
-	<form action="${logoutUrl}" method="post" id="logoutForm">
-		<input type="hidden" name="${_csrf.parameterName}"
-			value="${_csrf.token}" />
-	</form>
-	<script>
-		function formSubmit() {
-			document.getElementById("logoutForm").submit();
-		}
-	</script>
 
-	<c:if test="${pageContext.request.userPrincipal.name != null}">
-		<h2>
-			Welcome : ${pageContext.request.userPrincipal.name} | <a
-				href="javascript:formSubmit()"> Logout</a>
-		</h2>
-	</c:if>
+	<form class="form-create" name='createForm' action="/teacher/create" method='POST' enctype="multipart/form-data">
+		<table class="table table-bordered">
+			<tbody>
+				<tr>
+					<td>Tên nhóm thi:</td>
+					<td><input type="text" name="groupid" placeholder="Tên nhóm thi"/></td>
+				</tr>
+				<tr>
+					<td>Duyệt file excel:</td>
+					<td><input type="file" name="file"/></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<button class="btn btn-primary type="submit">Tạo nhóm</button>
+	</form>
 
 	<script type="application/javascript" src="js/jquery.js"></script>
 	<script type="application/javascript" src="js/bootstrap.js"></script>
