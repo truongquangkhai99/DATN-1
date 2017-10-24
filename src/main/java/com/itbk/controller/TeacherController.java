@@ -1,8 +1,9 @@
 package com.itbk.controller;
 
-
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +23,11 @@ public class TeacherController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String listUploadedFiles(Model model) throws IOException {
-		System.out.println("chay toi day 1");
 		return "/teacher/create";
 	}
 
 	@RequestMapping(value = "/group", method = RequestMethod.POST)
 	public String createGroup(@RequestParam("file") MultipartFile file, Model model) throws IOException {
-		System.out.println("chay toi day 2");
 		String name = file.getOriginalFilename();
 		if (!file.isEmpty()) {
 			InputStream fileInputStream = file.getInputStream();
@@ -37,28 +36,35 @@ public class TeacherController {
 
 			Map<Integer, List<String>> data = new HashMap<>();
 			int i = 0;
+			String string = "###";
 			for (Row row : sheet) {
 				data.put(i, new ArrayList<String>());
 				for (Cell cell : row) {
-					if(cell.getCellType() == Cell.CELL_TYPE_STRING) {
-						String result = cell.getStringCellValue();
-						;
-						System.out.println("vinhpro: " + result);
+					switch (cell.getCellTypeEnum()) {
+						case STRING:
+							string = cell.toString();
+							data.get(i).add(string);
+							break;
+						case NUMERIC:
+							if (DateUtil.isCellDateFormatted(cell)) {
+								string = cell.toString();
+								data.get(i).add(string);
+							} else {
+								string = NumberToTextConverter.toText(cell.getNumericCellValue());
+								data.get(i).add(string);
+							}
+							break;
+						default: data.get(new Integer(i)).add("###");
 					}
 
-//					data.get(i).add(cell.toString());
 				}
 				i++;
 			}
-
-			/*for (Integer key : data.keySet()) {
-				System.out.println("key = " + key + " | value = " + data.get(key));
-			}*/
+			workbook.close();
 
 			return "/teacher/create";
 		} else {
 			return "/teacher/create";
 		}
-
 	}
 }
