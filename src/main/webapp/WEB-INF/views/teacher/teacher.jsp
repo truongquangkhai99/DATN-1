@@ -10,15 +10,7 @@
 	</head>
 <body>
 	<h1>Title : ${title}</h1>
-	<c:if test="${pageContext.request.userPrincipal.name != null}">
-		<% if (!request.isUserInRole("TEACHER")) { %>
-			<% response.sendRedirect("/403"); %>
-		<% } %>
-	</c:if>
 
-	<c:if test="${pageContext.request.userPrincipal.name == null}">
-		<% response.sendRedirect("/login"); %>
-	</c:if>
 	<c:url value="/logout" var="logoutUrl" />
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"

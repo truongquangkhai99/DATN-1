@@ -60,8 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.access("hasRole('ROLE_ADMIN')")
 			.antMatchers("student/**")
 			.access("hasRole('ROLE_STUDENT')")
-			.antMatchers("teacher/**")
-			.access("hasRole('ROLE_TEACHER')")
+			/*.antMatchers("teacher*//**")
+			.access("hasRole('ROLE_TEACHER')")*/
 			.and().formLogin()
 			.loginPage("/login").failureUrl("/login?error")
 			.usernameParameter("username")

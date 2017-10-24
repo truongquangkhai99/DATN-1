@@ -9,17 +9,10 @@
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
 	</head>
 <body>
-	<c:if test="${pageContext.request.userPrincipal.name != null}">
-		<% if (!request.isUserInRole("TEACHER")) { %>
-			<% response.sendRedirect("/403"); %>
-		<% } %>
-	</c:if>
 
-	<c:if test="${pageContext.request.userPrincipal.name == null}">
-		<% response.sendRedirect("/login"); %>
-	</c:if>
 
-	<form class="form-create" name='createForm' action="/teacher/create" method='POST' enctype="multipart/form-data">
+	<form class="form-create" name='createForm' action="/teacher/group" method="POST" enctype="multipart/form-data" >
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<table class="table table-bordered">
 			<tbody>
 				<tr>
@@ -28,7 +21,7 @@
 				</tr>
 				<tr>
 					<td>Duyệt file excel:</td>
-					<td><input type="file" name="file"/></td>
+					<td><input type="file" name="file" accept=".xls,.xlsx"/></td>
 				</tr>
 			</tbody>
 		</table>
