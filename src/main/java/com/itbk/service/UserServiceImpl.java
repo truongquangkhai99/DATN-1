@@ -1,6 +1,7 @@
 package com.itbk.service;
 
 import com.itbk.model.User;
+import com.itbk.repository.UserRepository;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +14,9 @@ import java.util.List;
 @Component
 @Service("userService")
 public class UserServiceImpl implements UserService {
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	@Qualifier("sessionFactory")
@@ -31,4 +35,10 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 	}
+
+	@Override
+	public User saveUser(User user) {
+		return userRepository.save(user);
+	}
+
 }

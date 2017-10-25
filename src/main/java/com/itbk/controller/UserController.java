@@ -2,6 +2,12 @@ package com.itbk.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.itbk.model.User;
+import com.itbk.model.UserRole;
+import com.itbk.service.UserRoleService;
+import com.itbk.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -15,6 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class UserController {
+
+	private static boolean isStartApp = true;
+
+	@Autowired
+	private UserRoleService userRoleService;
+
+	@Autowired
+	@Qualifier("userService")
+	private UserService userService;
 
 	// Controller for Home page
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
@@ -51,7 +66,13 @@ public class UserController {
 	// Controller for the login
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Model model) {
-		model.addAttribute("title", "This is Login page");
+		if(isStartApp) {
+			User user = new User("admin", "admin", true);
+			userService.saveUser(user);
+			UserRole userRole = new UserRole(user, "ROLE_ADMIN");
+			userRoleService.saveUserRole(userRole);
+			isStartApp = false;
+		}
 
 		return "login";
 	}

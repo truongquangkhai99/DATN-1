@@ -1,11 +1,16 @@
 package com.itbk.controller;
 
 import com.itbk.model.GroupStudent;
+import com.itbk.model.User;
+import com.itbk.model.UserRole;
 import com.itbk.service.GroupStudentService;
+import com.itbk.service.UserRoleService;
+import com.itbk.service.UserService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +26,13 @@ public class TeacherController {
 
 	@Autowired
 	private GroupStudentService groupStudentService;
+
+	@Autowired
+	private UserRoleService userRoleService;
+
+	@Autowired
+	@Qualifier("userService")
+	private UserService userService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String listUploadedFiles(Model model) throws IOException {
@@ -71,6 +83,10 @@ public class TeacherController {
 					groupStudent.setTeacher(teacher);
 					groupStudent.setGroup(id);
 					groupStudentService.save(groupStudent);
+					User user = new User(groupStudent.getId(), groupStudent.getDateOfBirth(), true);
+					userService.saveUser(user);
+					UserRole userRole = new UserRole(user, "ROLE_STUDENT");
+					userRoleService.saveUserRole(userRole);
 				}
 				workbook.close();
 				model.addAttribute("success", true);
