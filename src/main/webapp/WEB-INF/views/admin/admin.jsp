@@ -18,7 +18,9 @@
 	<c:if test="${!requestScope.isAdmin}">
 		<c:redirect url = "/403"/>
 	</c:if>
-	
+
+	<button class="btn btn-primary"><a id="bt-login" href="/admin/create">Thêm giảng viên</a></button>
+
 	<c:url value="/logout" var="logoutUrl" />
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"
