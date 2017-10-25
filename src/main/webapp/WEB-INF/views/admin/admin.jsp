@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page session="true"%>
+<%@ page session="true"%>
 <!DOCTYPE html >
 <html>
 	<head>
@@ -9,16 +9,16 @@
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
 	</head>
 <body>
-	<h1>Title : ${title}</h1>
-	<c:if test="${pageContext.request.userPrincipal.name != null}">
-		<% if (!request.isUserInRole("ADMIN")) { %>
-           <% response.sendRedirect("/403"); %>
-        <% } %>
+	
+	<c:if test="${empty pageContext.request.userPrincipal.name}">
+		<c:redirect url = "/login"/>
 	</c:if>
 
-	<c:if test="${pageContext.request.userPrincipal.name == null}">
-		<% response.sendRedirect("/login"); %>
+	<% request.setAttribute("isAdmin", request.isUserInRole("ADMIN")); %>
+	<c:if test="${!requestScope.isAdmin}">
+		<c:redirect url = "/403"/>
 	</c:if>
+	
 	<c:url value="/logout" var="logoutUrl" />
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"

@@ -57,6 +57,7 @@ public class UserController {
 	}
 
 	// Controller for customize the error message
+	@SuppressWarnings("unused")
 	private String getErrorMessage(HttpServletRequest request, String key) {
 		Exception exception = (Exception) request.getSession().getAttribute(key);
 		String error = "";

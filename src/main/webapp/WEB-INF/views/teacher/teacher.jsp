@@ -9,8 +9,16 @@
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
 	</head>
 <body>
-	<h1>Title : ${title}</h1>
+	<c:if test="${empty pageContext.request.userPrincipal.name}">
+		<c:redirect url = "/login"/>
+	</c:if>
+	
+	<% request.setAttribute("isTeacher", request.isUserInRole("TEACHER")); %>
+	<c:if test="${!requestScope.isTeacher}">
+		<c:redirect url = "/403"/>
+	</c:if>
 
+	
 	<c:url value="/logout" var="logoutUrl" />
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"

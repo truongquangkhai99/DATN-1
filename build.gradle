@@ -46,7 +46,7 @@ dependencies {
     runtime("com.microsoft.sqlserver:mssql-jdbc:6.2.1.jre8")
     compile("org.springframework.boot:spring-boot-starter-jdbc")
     compile ("org.springframework.boot:spring-boot-starter-web")
-    compile ("org.apache.poi:poi:3.7")
+    compile ("org.apache.poi:poi:3.15")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper'
 }

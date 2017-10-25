@@ -1,9 +1,11 @@
 package com.itbk.controller;
 
+import com.itbk.model.GroupStudent;
+import com.itbk.service.GroupStudentService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,58 +14,74 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping(value = {"/teacher"})
 public class TeacherController {
+
+	@Autowired
+	private GroupStudentService groupStudentService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String listUploadedFiles(Model model) throws IOException {
 		return "/teacher/create";
 	}
 
+	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/group", method = RequestMethod.POST)
-	public String createGroup(@RequestParam("file") MultipartFile file, Model model) throws IOException {
-		String name = file.getOriginalFilename();
+	public String createGroup(@RequestParam("file") MultipartFile file, @RequestParam("groupid") String id,
+							  @RequestParam("teacher") String teacher, Model model) {
 		if (!file.isEmpty()) {
-			InputStream fileInputStream = file.getInputStream();
-			Workbook workbook = new HSSFWorkbook(fileInputStream);
-			Sheet sheet = workbook.getSheetAt(0);
+			try {
+				Workbook workbook = new HSSFWorkbook(file.getInputStream());
+				Sheet sheet = workbook.getSheetAt(0);
+				String string = "###";
 
-			Map<Integer, List<String>> data = new HashMap<>();
-			int i = 0;
-			String string = "###";
-			for (Row row : sheet) {
-				data.put(i, new ArrayList<String>());
-				for (Cell cell : row) {
-					switch (cell.getCellTypeEnum()) {
-						case STRING:
-							string = cell.toString();
-							data.get(i).add(string);
-							break;
-						case NUMERIC:
-							if (DateUtil.isCellDateFormatted(cell)) {
+				for (Row row : sheet) {
+					if(row.getRowNum() == 0) continue;
+					GroupStudent groupStudent = new GroupStudent();
+					for (Cell cell : row) {
+						switch (cell.getCellTypeEnum()) {
+							case STRING:
 								string = cell.toString();
-								data.get(i).add(string);
-							} else {
-								string = NumberToTextConverter.toText(cell.getNumericCellValue());
-								data.get(i).add(string);
-							}
-							break;
-						default: data.get(new Integer(i)).add("###");
+								break;
+							case NUMERIC:
+								if (DateUtil.isCellDateFormatted(cell)) {
+									string = cell.toString();
+								} else {
+									string = NumberToTextConverter.toText(cell.getNumericCellValue());
+								}
+								break;
+						}
+						switch (cell.getColumnIndex()) {
+							case 1:
+								groupStudent.setId(string);
+								break;
+							case 2:
+								groupStudent.setName(string);
+								break;
+							case 3:
+								groupStudent.setDateOfBirth(string);
+								break;
+							case 4:
+								groupStudent.setClassStudent(string);
+								break;
+						}
 					}
-
+					groupStudent.setTeacher(teacher);
+					groupStudent.setGroup(id);
+					groupStudentService.save(groupStudent);
 				}
-				i++;
+				workbook.close();
+				model.addAttribute("success", true);
+				return "/teacher/create";
+			} catch (Exception e) {
+				model.addAttribute("success", false);
+				return "/teacher/create";
 			}
-			workbook.close();
 
-			return "/teacher/create";
 		} else {
+			model.addAttribute("success", false);
 			return "/teacher/create";
 		}
 	}
