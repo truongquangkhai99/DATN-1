@@ -34,8 +34,6 @@ public class UserController {
 	// Controller for Home page
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
 	public String homePage(Model model) {
-		model.addAttribute("title", "This is Home page");
-
 		return "home";
 	}
 

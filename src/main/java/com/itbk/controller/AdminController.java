@@ -1,7 +1,9 @@
 package com.itbk.controller;
 
+import com.itbk.model.Teacher;
 import com.itbk.model.User;
 import com.itbk.model.UserRole;
+import com.itbk.service.TeacherService;
 import com.itbk.service.UserRoleService;
 import com.itbk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +27,24 @@ public class AdminController {
 	@Qualifier("userService")
 	private UserService userService;
 
+	@Autowired
+	private TeacherService teacherService;
+
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String listUploadedFiles(Model model) throws IOException {
 		return "/admin/create";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String createGroup(@RequestParam("name") String name, @RequestParam("id") String id,
-				@RequestParam("account") String account, @RequestParam("password") String password, Model model) {
+	public String createGroup(@RequestParam("name") String name, @RequestParam("account") String account,
+							  @RequestParam("password") String password, Model model) {
 
 		User user = new User(account, password, true);
 		userService.saveUser(user);
 		UserRole userRole = new UserRole(user, "ROLE_TEACHER");
 		userRoleService.saveUserRole(userRole);
+		Teacher teacher = new Teacher(name, account, password);
+		teacherService.saveTeacher(teacher);
 
 		model.addAttribute("success", true);
 		return "/admin/create";

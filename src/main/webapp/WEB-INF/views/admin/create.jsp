@@ -27,10 +27,6 @@
 					<td><input type="text" name="name" placeholder="Tên giảng viên"/></td>
 				</tr>
 				<tr>
-					<td>Id giảng viên:</td>
-					<td><input type="text" name="id" placeholder="Id giảng viên"/></td>
-				</tr>
-				<tr>
 					<td>Tài khoản:</td>
 					<td><input type="text" name="account" placeholder="Tài khoản"/></td>
 				</tr>

@@ -40,7 +40,7 @@ public class TeacherController {
 	}
 
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
-	@RequestMapping(value = "/group", method = RequestMethod.POST)
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String createGroup(@RequestParam("file") MultipartFile file, @RequestParam("groupid") String id,
 							  @RequestParam("teacher") String teacher, Model model) {
 		if (!file.isEmpty()) {
@@ -96,6 +96,24 @@ public class TeacherController {
 				return "/teacher/create";
 			}
 
+		} else {
+			model.addAttribute("success", false);
+			return "/teacher/create";
+		}
+	}
+
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public String addTestFiles(Model model) throws IOException {
+		return "/teacher/test";
+	}
+
+	@SuppressWarnings({ "deprecation", "incomplete-switch" })
+	@RequestMapping(value = "/test", method = RequestMethod.POST)
+	public String createGroup(@RequestParam("file") MultipartFile file,
+							  @RequestParam("groupid") String idGroup, Model model) {
+		if (!file.isEmpty()) {
+			model.addAttribute("success", true);
+			return "/teacher/create";
 		} else {
 			model.addAttribute("success", false);
 			return "/teacher/create";

@@ -4,7 +4,7 @@
 <!DOCTYPE html >
 <html>
 	<head>
-		<title>Tạo nhóm sinh viên</title>
+		<title>Tạo nhóm đề thi</title>
 		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
 	</head>
@@ -18,7 +18,7 @@
 		<c:redirect url = "/403"/>
 	</c:if>
 
-	<form class="form-create" name='createForm' action="/teacher/create" method="POST" enctype="multipart/form-data" >
+	<form class="form-create" name='createForm' action="/teacher/test" method="POST" enctype="multipart/form-data" >
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<table class="table table-bordered">
 			<tbody>
@@ -27,22 +27,18 @@
 					<td><input type="text" name="groupid" placeholder="Tên nhóm thi"/></td>
 				</tr>
 				<tr>
-					<td>Tên giảng viên:</td>
-					<td><input type="text" name="teacher" placeholder="Tên giảng viên"/></td>
-				</tr>
-				<tr>
-					<td>Duyệt file excel:</td>
-					<td><input type="file" name="file" accept=".xls,.xlsx"/></td>
+					<td>Duyệt file word:</td>
+					<td><input type="file" name="file" accept=".doc,.docx"/></td>
 				</tr>
 			</tbody>
 		</table>
 		<div>
-			<button class="btn btn-primary" type='submit'>Tạo nhóm</button>
+			<button class="btn btn-primary" type='submit'>Tạo đề thi</button>
 			<c:if test="${success != null && success}">
-				<div id='info-create-group' style="color: blue">Tạo nhóm thành công</div>
+				<div id='info-create-group' style="color: blue">Tạo đề thi thành công</div>
 			</c:if>
 			<c:if test="${success != null && !success}">
-				<div id='info-create-group' style="color: red">Tạo nhóm không thành công</div>
+				<div id='info-create-group' style="color: red">Tạo đề thi không thành công</div>
 			</c:if>
 		</div>
 	</form>

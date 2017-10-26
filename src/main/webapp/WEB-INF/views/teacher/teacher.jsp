@@ -18,7 +18,6 @@
 		<c:redirect url = "/403"/>
 	</c:if>
 
-	
 	<c:url value="/logout" var="logoutUrl" />
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"
@@ -29,10 +28,11 @@
 			document.getElementById("logoutForm").submit();
 		}
 	</script>
-		<button class="btn btn-primary"><a id="bt-login" href="/teacher/create">Tạo nhóm thi</a></button>
-		<h2>
-			<a href="javascript:formSubmit()"> Logout</a>
-		</h2>
+	<button class="btn btn-primary"><a id="bt-login" href="/teacher/create">Tạo nhóm thi</a></button>
+	<button class="btn btn-primary"><a id="bt-login" href="/teacher/test">Tạo đề thi</a></button>
+	<h2>
+		<a href="javascript:formSubmit()"> Logout</a>
+	</h2>
 
 	<script type="application/javascript" src="js/jquery.js"></script>
 	<script type="application/javascript" src="js/bootstrap.js"></script>

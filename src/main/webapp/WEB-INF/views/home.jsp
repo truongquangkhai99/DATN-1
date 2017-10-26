@@ -13,6 +13,22 @@
 			<h1 class="home-text-display">TRƯỜNG ĐẠI HỌC BÁCH KHOA ĐÀ NẴNG</h1>
 			<h2 class="home-text-display">KHOA CÔNG NGHỆ THÔNG TIN</h2>
 			<button class="btn btn-primary"><a id="bt-login" href="/login">Đăng nhập</a></button>
+
+			<% request.setAttribute("isAdmin", request.isUserInRole("ADMIN")); %>
+			<c:if test="${requestScope.isAdmin}">
+				<c:redirect url = "/admin"/>
+			</c:if>
+
+			<% request.setAttribute("isTeacher", request.isUserInRole("TEACHER")); %>
+			<c:if test="${requestScope.isTeacher}">
+				<c:redirect url = "/teacher"/>
+			</c:if>
+
+			<% request.setAttribute("isStudent", request.isUserInRole("STUDENT")); %>
+			<c:if test="${requestScope.isStudent}">
+				<c:redirect url = "/student"/>
+			</c:if>
+
 			<script type="application/javascript" src="js/jquery.js"></script>
 			<script type="application/javascript" src="js/bootstrap.js"></script>
 		</div>
