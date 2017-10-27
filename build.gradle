@@ -1,15 +1,15 @@
 buildscript {
-    ext {
-        springBootVersion = '1.5.6.RELEASE'
-    }
-    repositories {
-        maven { url "http://repo.spring.io/libs-milestone" }
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
-        classpath("io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE")
-    }
+	ext {
+		springBootVersion = '1.5.6.RELEASE'
+	}
+	repositories {
+		maven { url "http://repo.spring.io/libs-milestone" }
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
+		classpath("io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE")
+	}
 }
 
 apply plugin: 'java'
@@ -21,44 +21,45 @@ apply plugin: 'war'
 
 
 war {
-    baseName = 'springboot'
-    version = '0.0.1-SNAPSHOT'
+	baseName = 'springboot'
+	version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-    mavenCentral()
-    maven { url "http://repo.spring.io/libs-milestone" }
+	mavenCentral()
+	maven { url "http://repo.spring.io/libs-milestone" }
 }
 
 configurations {
-    providedRuntime
+	providedRuntime
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile("org.springframework.security:spring-security-config:4.2.3.RELEASE")
-    compile("org.springframework.security:spring-security-web:4.2.3.RELEASE")
-    compile("org.springframework.security:spring-security-taglibs:3.1.4.RELEASE")
-    compile("javax.servlet:jstl:1.2")
+	compile("org.springframework.boot:spring-boot-starter-data-jpa")
+	compile("org.springframework.security:spring-security-config:4.2.3.RELEASE")
+	compile("org.springframework.security:spring-security-web:4.2.3.RELEASE")
+	compile("org.springframework.security:spring-security-taglibs:3.1.4.RELEASE")
+	compile("javax.servlet:jstl:1.2")
 //    runtime("mysql:mysql-connector-java")
-    runtime("com.microsoft.sqlserver:mssql-jdbc:6.2.1.jre8")
-    compile("org.springframework.boot:spring-boot-starter-jdbc")
-    compile ("org.springframework.boot:spring-boot-starter-web")
-    compile ("org.apache.poi:poi:3.15")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	runtime("com.microsoft.sqlserver:mssql-jdbc:6.2.1.jre8")
+	compile("org.springframework.boot:spring-boot-starter-jdbc")
+	compile ("org.springframework.boot:spring-boot-starter-web")
+	compile ("org.apache.poi:poi:3.15")
+	compile ("org.apache.poi:poi-ooxml:3.15")
+	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+	providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper'
 }
 
 
 eclipse {
-    classpath {
-         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
-    }
+	classpath {
+		 containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+	}
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+	gradleVersion = '2.3'
 }

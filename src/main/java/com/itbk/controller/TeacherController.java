@@ -1,14 +1,12 @@
 package com.itbk.controller;
 
-import com.itbk.model.GroupStudent;
-import com.itbk.model.User;
-import com.itbk.model.UserRole;
-import com.itbk.service.GroupStudentService;
-import com.itbk.service.UserRoleService;
-import com.itbk.service.UserService;
+import com.itbk.model.*;
+import com.itbk.service.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping(value = {"/teacher"})
@@ -34,14 +33,20 @@ public class TeacherController {
 	@Qualifier("userService")
 	private UserService userService;
 
+	@Autowired
+	QuestionService questionService;
+
+	@Autowired
+	AnswerService answerService;
+
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String listUploadedFiles(Model model) throws IOException {
+	public String createGroupGet(Model model) throws IOException {
 		return "/teacher/create";
 	}
 
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String createGroup(@RequestParam("file") MultipartFile file, @RequestParam("groupid") String id,
+	public String createGroupPost(@RequestParam("file") MultipartFile file, @RequestParam("groupid") String id,
 							  @RequestParam("teacher") String teacher, Model model) {
 		if (!file.isEmpty()) {
 			try {
@@ -103,20 +108,76 @@ public class TeacherController {
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String addTestFiles(Model model) throws IOException {
+	public String createExaminationGet(Model model) throws IOException {
+		ArrayList<String> arrayGroupStudent = groupStudentService.findAllGroupId();
+		model.addAttribute("groups", arrayGroupStudent);
+
 		return "/teacher/test";
 	}
 
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/test", method = RequestMethod.POST)
-	public String createGroup(@RequestParam("file") MultipartFile file,
-							  @RequestParam("groupid") String idGroup, Model model) {
+	public String createExaminationPost(@RequestParam("file") MultipartFile file,
+							  @RequestParam("groupid") String group, Model model) {
 		if (!file.isEmpty()) {
-			model.addAttribute("success", true);
-			return "/teacher/create";
+			XWPFDocument document = null;
+			FileInputStream fileInputStream = null;
+			try {
+				fileInputStream = (FileInputStream)(file.getInputStream());
+				document = new XWPFDocument(fileInputStream);
+				XWPFWordExtractor extractor = new XWPFWordExtractor(document);
+				String content = extractor.getText();
+				String [] arrayQuestion = content.split("###");
+				int numberOfQuestion = arrayQuestion.length;
+				for(int i = 1; i < numberOfQuestion; i++) {
+					String arrayResult[] = arrayQuestion[i].split("XXX");
+					for(int j = 0; j < arrayResult.length; j++) {
+						if(j == 0) {
+							questionService.saveQuestion(new Question(arrayResult[j], group));
+						} else {
+							if(arrayResult[j].charAt(0) == '=') {
+								answerService.saveAnswer(new Answer(questionService.findLastest().getId(), arrayResult[j].substring(1),true));
+							} else {
+								answerService.saveAnswer(new Answer(questionService.findLastest().getId(), arrayResult[j].substring(1),false));
+							}
+						}
+					}
+				}
+				model.addAttribute("success", true);
+				return "/teacher/test";
+			} catch (Exception e) {
+				model.addAttribute("success", false);
+				System.out.println("vinh err: " + e.getMessage());
+				return "/teacher/test";
+			} finally {
+				try {
+					if (document != null) {
+						document.close();
+					}
+					if (fileInputStream != null) {
+						fileInputStream.close();
+					}
+				} catch (Exception ex) {
+				}
+			}
 		} else {
 			model.addAttribute("success", false);
-			return "/teacher/create";
+			return "/teacher/test";
 		}
+	}
+
+	@RequestMapping(value = "/preview", method = RequestMethod.GET)
+	public String previewExaminationGet(Model model) throws IOException {
+		ArrayList<String> arrayGroupStudent = groupStudentService.findAllGroupId();
+		model.addAttribute("groups", arrayGroupStudent);
+
+		return "/teacher/preview";
+	}
+
+	@RequestMapping(value = "/preview", method = RequestMethod.POST)
+	public String previewExaminationPost(@RequestParam("groupid") String group, Model model) throws IOException {
+
+
+		return "/teacher/preview";
 	}
 }

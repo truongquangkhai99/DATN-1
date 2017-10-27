@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /**
  * Created by PC on 10/25/2017.
  */
@@ -29,5 +31,10 @@ public class GroupStudentServiceImpl implements GroupStudentService {
 	@Override
 	public GroupStudent findById(Integer id) {
 		return groupStudentRepository.findOne(id);
+	}
+
+	@Override
+	public ArrayList<String> findAllGroupId() {
+		return groupStudentRepository.findAllGroupId();
 	}
 }

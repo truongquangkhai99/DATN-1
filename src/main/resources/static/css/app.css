@@ -70,3 +70,8 @@ body {
 		border-top-right-radius: 0;
 	}
 }
+
+.question-content {
+	font-weight: bold;
+	font-size: 20px;
+}

@@ -9,17 +9,16 @@
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
 	</head>
 <body>
-	<c:if test="${empty pageContext.request.userPrincipal.name}">
+	<%-- <c:if test="${empty pageContext.request.userPrincipal.name}">
 		<c:redirect url = "/login"/>
 	</c:if>
 
 	<% request.setAttribute("isTeacher", request.isUserInRole("TEACHER")); %>
 	<c:if test="${!requestScope.isTeacher}">
 		<c:redirect url = "/403"/>
-	</c:if>
+	</c:if> --%>
 
-	<form class="form-create" name='createForm' action="/teacher/test" method="POST" enctype="multipart/form-data" >
-		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+	<form>
 		<div class="form-group">
 			<label for="sel1">Chọn nhóm thi:</label>
 			<select class="form-control" id="sel1" name="groupid">
@@ -28,24 +27,23 @@
 				</c:forEach>
 			</select>
 		</div>
-		<table class="table table-bordered">
-			<tbody>
+		<button class="btn btn-primary" type='submit'>Xem</button>
+</form>
+
+	<table class="table table-bordered">
+		<tbody>
+			<c:forEach items="${examinations}" var="examination" varStatus="itr">
 				<tr>
-					<td>Duyệt file word:</td>
-					<td><input type="file" name="file" accept=".doc,.docx"/></td>
+					<td class = "question-content">${examination.name}</td>
+					<td>${examination.name}</td>
+					<td>${person.email}</td>
+					<td>${person.mobile}</td>
+					<td></td>
 				</tr>
-			</tbody>
-		</table>
-		<div>
-			<button class="btn btn-primary" type='submit'>Tạo đề thi</button>
-			<c:if test="${success != null && success}">
-				<div id='info-create-group' style="color: blue">Tạo đề thi thành công</div>
-			</c:if>
-			<c:if test="${success != null && !success}">
-				<div id='info-create-group' style="color: red">Tạo đề thi không thành công</div>
-			</c:if>
-		</div>
-	</form>
+			</c:forEach>
+		</tbody>
+
+	</table>
 
 	<script type="application/javascript" src="js/jquery.js"></script>
 	<script type="application/javascript" src="js/bootstrap.js"></script>

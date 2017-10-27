@@ -30,6 +30,7 @@
 	</script>
 	<button class="btn btn-primary"><a id="bt-login" href="/teacher/create">Tạo nhóm thi</a></button>
 	<button class="btn btn-primary"><a id="bt-login" href="/teacher/test">Tạo đề thi</a></button>
+	<button class="btn btn-primary"><a id="bt-login" href="/teacher/preview">Xem đề thi</a></button>
 	<h2>
 		<a href="javascript:formSubmit()"> Logout</a>
 	</h2>
