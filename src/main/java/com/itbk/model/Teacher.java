@@ -1,5 +1,7 @@
 package com.itbk.model;
 
+import org.hibernate.annotations.Nationalized;
+
 import javax.persistence.*;
 
 /**
@@ -34,6 +36,7 @@ public class Teacher {
 		this.id = id;
 	}
 
+	@Nationalized
 	@Column(name = "name", nullable = false)
 	public String getName() {
 		return name;

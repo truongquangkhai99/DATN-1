@@ -1,5 +1,7 @@
 package com.itbk.model;
 
+import org.hibernate.annotations.Nationalized;
+
 import javax.persistence.*;
 
 @Entity
@@ -45,6 +47,7 @@ public class GroupStudent {
 		this.id = id;
 	}
 
+	@Nationalized
 	@Column(name = "name", unique = false, nullable = false)
 	public String getName() {
 		return name;
@@ -72,6 +75,7 @@ public class GroupStudent {
 		this.classStudent = classStudent;
 	}
 
+	@Nationalized
 	@Column(name = "teacher", unique = false, nullable = false)
 	public String getTeacher() {
 		return teacher;

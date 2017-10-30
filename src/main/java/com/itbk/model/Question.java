@@ -1,6 +1,10 @@
 package com.itbk.model;
 
+import org.hibernate.annotations.Nationalized;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by PC on 10/27/2017.
@@ -11,6 +15,7 @@ public class Question {
 	private Integer id;
 	private String name;
 	private String group;
+	private List<Answer> answers = new ArrayList<>();
 
 	public Question() {}
 
@@ -30,7 +35,8 @@ public class Question {
 		this.id = id;
 	}
 
-	@Column(name = "name", unique = false, nullable = false)
+	@Nationalized
+	@Column(name = "name", unique = false, nullable = false, length = 1024)
 	public String getName() {
 		return name;
 	}
@@ -46,5 +52,14 @@ public class Question {
 
 	public void setGroup(String group) {
 		this.group = group;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
 	}
 }

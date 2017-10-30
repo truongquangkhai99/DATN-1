@@ -1,5 +1,6 @@
 package com.itbk.controller;
 
+import com.itbk.dto.Examination;
 import com.itbk.model.*;
 import com.itbk.service.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = {"/teacher"})
@@ -118,7 +119,7 @@ public class TeacherController {
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/test", method = RequestMethod.POST)
 	public String createExaminationPost(@RequestParam("file") MultipartFile file,
-							  @RequestParam("groupid") String group, Model model) {
+										@RequestParam("groupid") String group, Model model) {
 		if (!file.isEmpty()) {
 			XWPFDocument document = null;
 			FileInputStream fileInputStream = null;
@@ -133,7 +134,7 @@ public class TeacherController {
 					String arrayResult[] = arrayQuestion[i].split("XXX");
 					for(int j = 0; j < arrayResult.length; j++) {
 						if(j == 0) {
-							questionService.saveQuestion(new Question(arrayResult[j], group));
+							questionService.saveQuestion(new Question(arrayResult[j].toString(), group));
 						} else {
 							if(arrayResult[j].charAt(0) == '=') {
 								answerService.saveAnswer(new Answer(questionService.findLastest().getId(), arrayResult[j].substring(1),true));
@@ -143,6 +144,7 @@ public class TeacherController {
 						}
 					}
 				}
+
 				model.addAttribute("success", true);
 				return "/teacher/test";
 			} catch (Exception e) {
@@ -176,7 +178,29 @@ public class TeacherController {
 
 	@RequestMapping(value = "/preview", method = RequestMethod.POST)
 	public String previewExaminationPost(@RequestParam("groupid") String group, Model model) throws IOException {
+		List<Question> list = questionService.getExaminationByGroupId(group);
+		Map<String, List<Answer>> map = new HashMap<>();
+		ArrayList<Examination> examinations = new ArrayList<>();
+		for (Question a : list) {
+			map.put(a.getName(), a.getAnswers());
+		}
 
+		for (Map.Entry<String, List<Answer>> entry : map.entrySet()) {
+			Examination examination = new Examination();
+			examination.setQuestion(entry.getKey());
+			ArrayList<String> stringArrayList = new ArrayList<>();
+			for ( Answer value:  entry.getValue()) {
+				stringArrayList.add(value.getAnswer());
+			}
+			examination.setAnswer(stringArrayList);
+			examinations.add(examination);
+		}
+
+		model.addAttribute("examinations", examinations);
+		model.addAttribute("groups", group);
+
+		ArrayList<Question> questions = (ArrayList<Question>) questionService.findAll();
+		model.addAttribute("questions", questions);
 
 		return "/teacher/preview";
 	}
