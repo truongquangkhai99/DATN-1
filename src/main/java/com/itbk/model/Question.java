@@ -15,13 +15,15 @@ public class Question {
 	private Integer id;
 	private String name;
 	private String group;
+	private boolean isRadio;
 	private List<Answer> answers = new ArrayList<>();
 
 	public Question() {}
 
-	public Question(String name, String group) {
+	public Question(String name, String group, boolean isRadio) {
 		this.name = name;
 		this.group = group;
+		this.isRadio = isRadio;
 	}
 
 	@Id
@@ -61,5 +63,14 @@ public class Question {
 
 	public void setAnswers(List<Answer> answers) {
 		this.answers = answers;
+	}
+
+	@Column(name = "is_radio", unique = false, nullable = false)
+	public boolean isRadio() {
+		return isRadio;
+	}
+
+	public void setRadio(boolean radio) {
+		isRadio = radio;
 	}
 }

@@ -27,10 +27,6 @@
 					<td><input type="text" name="groupid" placeholder="Tên nhóm thi"/></td>
 				</tr>
 				<tr>
-					<td>Tên giảng viên:</td>
-					<td><input type="text" name="teacher" placeholder="Tên giảng viên"/></td>
-				</tr>
-				<tr>
 					<td>Duyệt file excel:</td>
 					<td><input type="file" name="file" accept=".xls,.xlsx"/></td>
 				</tr>

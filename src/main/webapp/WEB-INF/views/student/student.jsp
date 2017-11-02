@@ -17,7 +17,13 @@
 	<c:if test="${!requestScope.isStudent}">
 		<c:redirect url = "/403"/>
 	</c:if>
-	
+
+	<button class="btn btn-primary"><a id="bt-login" href="/student/test">Làm bài thi</a></button>
+
+	<c:if test="${sessionScope.isTested}">
+	    <div id='info-create-group' style="color: red">Bạn đã thi rồi !</div>
+	</c:if>
+
 	<c:url value="/logout" var="logoutUrl" />
 	<form action="${logoutUrl}" method="post" id="logoutForm">
 		<input type="hidden" name="${_csrf.parameterName}"
@@ -31,8 +37,7 @@
 
 	<c:if test="${pageContext.request.userPrincipal.name != null}">
 		<h2>
-			Welcome : ${pageContext.request.userPrincipal.name} | <a
-				href="javascript:formSubmit()"> Logout</a>
+			Welcome : ${pageContext.request.userPrincipal.name} | <a href="javascript:formSubmit()"> Logout</a>
 		</h2>
 	</c:if>
 	<script type="application/javascript" src="js/jquery.js"></script>

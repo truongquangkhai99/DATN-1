@@ -11,6 +11,11 @@
 	<body onload='document.loginForm.username.focus();'>
 		<div class="wrapper">
 			<form class="form-signin" name='loginForm' action="<c:url value='/login' />" method='POST'>
+				<c:if test="${param.error != null}">
+					<div class="alert alert-danger">
+						<p>Tài khoản hoặc mật khẩu không đúng. Xin nhập lại!</p>
+					</div>
+				</c:if>
 				<h2 class="form-signin-heading">Vui lòng đăng nhập</h2>
 				<input type="text" class="form-control" name="username" placeholder="Tài khoản"/>
 				<input type="password" class="form-control" name="password" placeholder="Mật khẩu"/>

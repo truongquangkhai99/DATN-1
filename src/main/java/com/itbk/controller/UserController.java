@@ -2,8 +2,6 @@ package com.itbk.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.itbk.model.User;
-import com.itbk.model.UserRole;
 import com.itbk.service.UserRoleService;
 import com.itbk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,13 +62,13 @@ public class UserController {
 	// Controller for the login
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Model model) {
-		if(isStartApp) {
+		/*if(isStartApp) {
 			User user = new User("admin", "admin", true);
 			userService.saveUser(user);
 			UserRole userRole = new UserRole(user, "ROLE_ADMIN");
 			userRoleService.saveUserRole(userRole);
 			isStartApp = false;
-		}
+		}*/
 
 		return "login";
 	}

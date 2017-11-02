@@ -1,20 +1,25 @@
 package com.itbk.dto;
 
-import java.util.ArrayList;
+import com.itbk.model.Answer;
+
+import java.util.List;
 
 /**
  * Created by PC on 10/27/2017.
  */
 
 public class Examination {
+	int questionId;
 	private String question;
-	private ArrayList<String> answer;
+	private List<Answer> answers;
+	private boolean radio;
 
 	public Examination() {}
 
-	public Examination(String question, ArrayList<String> answer) {
+	public Examination(String question, List<Answer> answer, boolean radio) {
 		this.question = question;
-		this.answer = answer;
+		this.answers = answer;
+		this.radio = radio;
 	}
 
 	public String getQuestion() {
@@ -25,11 +30,27 @@ public class Examination {
 		this.question = question;
 	}
 
-	public ArrayList<String> getAnswer() {
-		return answer;
+	public List<Answer> getAnswers() {
+		return answers;
 	}
 
-	public void setAnswer(ArrayList<String> answer1) {
-		this.answer = answer1;
+	public void setAnswers(List<Answer> answer) {
+		this.answers = answer;
+	}
+
+	public boolean getRadio() {
+		return radio;
+	}
+
+	public void setRadio(boolean radio) {
+		this.radio = radio;
+	}
+
+	public int getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(int questionId) {
+		this.questionId = questionId;
 	}
 }

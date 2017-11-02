@@ -9,13 +9,13 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "teacher")
+@Table(name = "teachers")
 public class Teacher {
 
+	private Integer id;
 	private String name;
 	private String account;
 	private String password;
-	private Integer id;
 
 	public Teacher() {}
 

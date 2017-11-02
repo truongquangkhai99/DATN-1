@@ -21,4 +21,9 @@ public class TeacherServiceImpl implements TeacherService {
 	public Teacher saveTeacher(Teacher teacher) {
 		return teacherRepository.save(teacher);
 	}
+
+	@Override
+	public Teacher findTeacherByUsername(String userName) {
+		return teacherRepository.findTeacherByUsername(userName);
+	}
 }

@@ -10,6 +10,8 @@ import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +27,7 @@ import java.util.*;
 public class TeacherController {
 
 	@Autowired
-	private GroupStudentService groupStudentService;
+	private StudentService studentService;
 
 	@Autowired
 	private UserRoleService userRoleService;
@@ -40,6 +42,9 @@ public class TeacherController {
 	@Autowired
 	AnswerService answerService;
 
+	@Autowired
+	TeacherService teacherService;
+
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String createGroupGet(Model model) throws IOException {
 		return "/teacher/create";
@@ -47,8 +52,7 @@ public class TeacherController {
 
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String createGroupPost(@RequestParam("file") MultipartFile file, @RequestParam("groupid") String id,
-							  @RequestParam("teacher") String teacher, Model model) {
+	public String createGroupPost(@RequestParam("file") MultipartFile file, @RequestParam("groupid") String id, Model model) {
 		if (!file.isEmpty()) {
 			try {
 				Workbook workbook = new HSSFWorkbook(file.getInputStream());
@@ -57,7 +61,7 @@ public class TeacherController {
 
 				for (Row row : sheet) {
 					if(row.getRowNum() == 0) continue;
-					GroupStudent groupStudent = new GroupStudent();
+					Student student = new Student();
 					for (Cell cell : row) {
 						switch (cell.getCellTypeEnum()) {
 							case STRING:
@@ -73,23 +77,23 @@ public class TeacherController {
 						}
 						switch (cell.getColumnIndex()) {
 							case 1:
-								groupStudent.setId(string);
+								student.setIdB(string);
 								break;
 							case 2:
-								groupStudent.setName(string);
+								student.setName(string);
 								break;
 							case 3:
-								groupStudent.setDateOfBirth(string);
+								student.setDateOfBirth(string);
 								break;
 							case 4:
-								groupStudent.setClassStudent(string);
+								student.setClassStd(string);
 								break;
 						}
 					}
-					groupStudent.setTeacher(teacher);
-					groupStudent.setGroup(id);
-					groupStudentService.save(groupStudent);
-					User user = new User(groupStudent.getId(), groupStudent.getDateOfBirth(), true);
+					student.setTeacher(getNameTeacher());
+					student.setGroup(id);
+					studentService.save(student);
+					User user = new User(student.getIdB(), student.getDateOfBirth(), true);
 					userService.saveUser(user);
 					UserRole userRole = new UserRole(user, "ROLE_STUDENT");
 					userRoleService.saveUserRole(userRole);
@@ -98,6 +102,7 @@ public class TeacherController {
 				model.addAttribute("success", true);
 				return "/teacher/create";
 			} catch (Exception e) {
+				System.out.println("loi tai day: " + e.getMessage());
 				model.addAttribute("success", false);
 				return "/teacher/create";
 			}
@@ -110,16 +115,16 @@ public class TeacherController {
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String createExaminationGet(Model model) throws IOException {
-		ArrayList<String> arrayGroupStudent = groupStudentService.findAllGroupId();
-		model.addAttribute("groups", arrayGroupStudent);
+		ArrayList<String> groups = studentService.findGroupByNameTeacher(getNameTeacher());
+		model.addAttribute("groups", groups);
 
 		return "/teacher/test";
 	}
 
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/test", method = RequestMethod.POST)
-	public String createExaminationPost(@RequestParam("file") MultipartFile file,
-										@RequestParam("groupid") String group, Model model) {
+	public String createExaminationPost(@RequestParam("file") MultipartFile file, @RequestParam("timer") String timer,
+				@RequestParam("groupid") String group, Model model) {
 		if (!file.isEmpty()) {
 			XWPFDocument document = null;
 			FileInputStream fileInputStream = null;
@@ -132,9 +137,19 @@ public class TeacherController {
 				int numberOfQuestion = arrayQuestion.length;
 				for(int i = 1; i < numberOfQuestion; i++) {
 					String arrayResult[] = arrayQuestion[i].split("XXX");
+					int countRightQuestion = 0;
+					for(int k = 0; k < arrayResult.length; k++) {
+						if(arrayResult[k].charAt(0) == '=') {
+							countRightQuestion++;
+						}
+					}
 					for(int j = 0; j < arrayResult.length; j++) {
 						if(j == 0) {
-							questionService.saveQuestion(new Question(arrayResult[j].toString(), group));
+							if(countRightQuestion >= 2) {
+								questionService.saveQuestion(new Question(arrayResult[j].toString(), group, false));
+							} else {
+								questionService.saveQuestion(new Question(arrayResult[j].toString(), group, true));
+							}
 						} else {
 							if(arrayResult[j].charAt(0) == '=') {
 								answerService.saveAnswer(new Answer(questionService.findLastest().getId(), arrayResult[j].substring(1),true));
@@ -144,6 +159,8 @@ public class TeacherController {
 						}
 					}
 				}
+				//set timer for student
+				studentService.updateTimerForGroup(Long.parseLong(timer) * 60, group);
 
 				model.addAttribute("success", true);
 				return "/teacher/test";
@@ -170,7 +187,7 @@ public class TeacherController {
 
 	@RequestMapping(value = "/preview", method = RequestMethod.GET)
 	public String previewExaminationGet(Model model) throws IOException {
-		ArrayList<String> arrayGroupStudent = groupStudentService.findAllGroupId();
+		ArrayList<String> arrayGroupStudent = studentService.findGroupByNameTeacher(getNameTeacher());
 		model.addAttribute("groups", arrayGroupStudent);
 
 		return "/teacher/preview";
@@ -179,29 +196,36 @@ public class TeacherController {
 	@RequestMapping(value = "/preview", method = RequestMethod.POST)
 	public String previewExaminationPost(@RequestParam("groupid") String group, Model model) throws IOException {
 		List<Question> list = questionService.getExaminationByGroupId(group);
-		Map<String, List<Answer>> map = new HashMap<>();
+		Map<Question, List<Answer>> map = new HashMap<>();
 		ArrayList<Examination> examinations = new ArrayList<>();
+		int count = 0;
 		for (Question a : list) {
-			map.put(a.getName(), a.getAnswers());
-		}
-
-		for (Map.Entry<String, List<Answer>> entry : map.entrySet()) {
 			Examination examination = new Examination();
-			examination.setQuestion(entry.getKey());
-			ArrayList<String> stringArrayList = new ArrayList<>();
-			for ( Answer value:  entry.getValue()) {
-				stringArrayList.add(value.getAnswer());
-			}
-			examination.setAnswer(stringArrayList);
+			examination.setQuestion("Câu " + (++count) + ": " + a.getName());
+			examination.setAnswers(a.getAnswers());
+			examination.setRadio(a.isRadio());
 			examinations.add(examination);
 		}
 
 		model.addAttribute("examinations", examinations);
 		model.addAttribute("groups", group);
 
-		ArrayList<Question> questions = (ArrayList<Question>) questionService.findAll();
-		model.addAttribute("questions", questions);
-
 		return "/teacher/preview";
+	}
+
+	public String getNameTeacher() {
+		Teacher teacher = teacherService.findTeacherByUsername(getUserName());
+		return teacher.getName();
+	}
+
+	public String getUserName() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String userName = null;
+		if (principal instanceof UserDetails) {
+			userName = ((UserDetails) principal).getUsername();
+		} else {
+			userName = principal.toString();
+		}
+		return userName;
 	}
 }

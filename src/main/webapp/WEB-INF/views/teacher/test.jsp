@@ -31,6 +31,10 @@
 		<table class="table table-bordered">
 			<tbody>
 				<tr>
+					<td>Số lượng câu hỏi:</td>
+					<td><input type="text" name="timer" placeholder="Thời gian làm bài (phút)"/></td>
+				</tr>
+				<tr>
 					<td>Duyệt file word:</td>
 					<td><input type="file" name="file" accept=".doc,.docx"/></td>
 				</tr>
@@ -46,6 +50,17 @@
 			</c:if>
 		</div>
 	</form>
+
+	<table class="table table-bordered">
+			<tbody>
+				<c:forEach items="${questions}" var="question" varStatus="itr">
+					<tr>
+						<td class = "question-content">${question.name}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+
+		</table>
 
 	<script type="application/javascript" src="js/jquery.js"></script>
 	<script type="application/javascript" src="js/bootstrap.js"></script>

@@ -7,4 +7,5 @@ import com.itbk.model.Teacher;
  */
 public interface TeacherService {
 	Teacher saveTeacher(Teacher teacher);
+	Teacher findTeacherByUsername(String userName);
 }

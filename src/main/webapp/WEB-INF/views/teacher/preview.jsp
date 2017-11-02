@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="java.util.ArrayList" %>
 <%@page session="true"%>
 <!DOCTYPE html >
 <html>
@@ -9,16 +10,17 @@
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
 	</head>
 <body>
-	<%-- <c:if test="${empty pageContext.request.userPrincipal.name}">
+	<c:if test="${empty pageContext.request.userPrincipal.name}">
 		<c:redirect url = "/login"/>
 	</c:if>
 
 	<% request.setAttribute("isTeacher", request.isUserInRole("TEACHER")); %>
 	<c:if test="${!requestScope.isTeacher}">
 		<c:redirect url = "/403"/>
-	</c:if> --%>
+	</c:if>
 
-	<form>
+	<form class="form-create" name='createForm' action="/teacher/preview" method="POST">
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<div class="form-group">
 			<label for="sel1">Chọn nhóm thi:</label>
 			<select class="form-control" id="sel1" name="groupid">
@@ -28,22 +30,36 @@
 			</select>
 		</div>
 		<button class="btn btn-primary" type='submit'>Xem</button>
-</form>
-
-	<table class="table table-bordered">
-		<tbody>
-			<c:forEach items="${examinations}" var="examination" varStatus="itr">
+	</form>
+	<c:forEach items="${examinations}" var="examination" varStatus="itr">
+		<div class="break-question"></div>
+		<table class="table table-bordered">
+			<thead>
 				<tr>
-					<td class = "question-content">${examination.name}</td>
-					<td>${examination.name}</td>
-					<td>${person.email}</td>
-					<td>${person.mobile}</td>
-					<td></td>
+					<th>${examination.question}</th>
 				</tr>
-			</c:forEach>
-		</tbody>
+			</thead>
+			<tbody>
+				<c:forEach items="${examination.answers}" var="answer" varStatus="itr">
+					<c:if test="${examination.radio == true}">
+						<tr>
+							<td>
+								<input type="radio" name="optradio">${answer.answer}
+							</td>
+						</tr>
+					</c:if>
 
-	</table>
+					<c:if test="${examination.radio == false}">
+						<tr>
+							<td>
+								<input type="checkbox" value="">${answer.answer}
+							</td>
+						</tr>
+					</c:if>
+				</c:forEach>
+			</tbody>
+		</table>
+	</c:forEach>
 
 	<script type="application/javascript" src="js/jquery.js"></script>
 	<script type="application/javascript" src="js/bootstrap.js"></script>

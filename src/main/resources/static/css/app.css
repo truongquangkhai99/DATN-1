@@ -71,7 +71,7 @@ body {
 	}
 }
 
-.question-content {
-	font-weight: bold;
-	font-size: 20px;
+.break-question {
+	height: 2px;
+	background-color: #879dc1;
 }
