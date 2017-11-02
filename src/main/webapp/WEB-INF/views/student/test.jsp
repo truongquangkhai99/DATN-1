@@ -7,34 +7,33 @@
 		<title>Sinh viên</title>
 		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
-		<script type="application/javascript" src="js/jquery.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script type="application/javascript" src="/js/jquery.js"></script>
+		<script type="application/javascript" src="/js/bootstrap.js"></script>
 	</head>
 <body>
+	<%
+		request.setAttribute("isStudent", request.isUserInRole("STUDENT"));
+		long timer = 0;
+		if(request.getAttribute("timer") != null) {
+			timer = (long)request.getAttribute("timer");
+		}
+	%>
+
 	<c:if test="${empty pageContext.request.userPrincipal.name}">
 		<c:redirect url = "/login"/>
 	</c:if>
-	
-	<% request.setAttribute("isStudent", request.isUserInRole("STUDENT")); %>
+
 	<c:if test="${!requestScope.isStudent}">
 		<c:redirect url = "/403"/>
 	</c:if>
 
 	<c:if test="${isTested != null && isTested}">
-		<% session.setAttribute("isTested", true); %>
 		<c:redirect url = "/student"/>
 	</c:if>
 
-	<%
-		long timer = 0;
-		if(request.getAttribute("timer") != null) {
-			timer = (Long)request.getAttribute("timer");
-		}
-	%>
+	<div id="count-down" style="overflow: hidden; position: fixed; top: 0; width:inherit; height: 40px; font-weight: bold; font-size: 30px"></div>
 
-	<div id="display"></div>
-
-	<form class="form-create" name='createForm' action="/student/test" method="POST">
+	<form class="form-create" style="margin-top: 60px; overflow: scroll; height: 700px" name='createForm' action="/student/test" method="POST">
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<c:forEach items="${examinations}" var="examination" varStatus="itr">
 			<div class="break-question"></div>
@@ -65,11 +64,10 @@
 				</tbody>
 			</table>
 		</c:forEach>
-		<button class="btn btn-primary" type='submit'>Nộp bài</button>
 	</form>
-	<form name='timerForm' action="/student/test" method="GET">
-		<input type="hidden" name="timerLast" value=""/>
-	</form>
+
+	<button class="btn btn-primary" onclick='SubmitFunction();'>Nộp bài</button>
+
 	<script>
 		var timerGlobal = 0;
 		function CountDown(duration, display) {
@@ -88,27 +86,22 @@
 					$(display).html("<b>Bạn còn " + minutes + " : " + seconds + "</b>");
 					if (--timer < 0) {
 						SubmitFunction();
-						$('#display').empty();
+						$('#count-down').empty();
 						clearInterval(interVal)
 					}
 				}, 1000);
 			}
 		}
 
-		function SubmitFunction(){
+		if(<%=timer != 0%>) {
+			CountDown(<%=timer%>, '#count-down');
+		}
+
+		function SubmitFunction() {
 			$('form[name="createForm"]').submit();
 		}
 
-		if(<%=timer != 0%>) {
-			CountDown(<%=timer%>, '#display');
-		}
-		
-		window.onbeforeunload = function (event) {
-			$('input[name="timerLast"]').val(timerGlobal);
-			$('form[name="timerForm"]').submit();
-		};
-
-		function load_ajax(){
+		function load_ajax() {
 			$.ajax({
 				url : "/student/test",
 				type : "get",
@@ -116,32 +109,14 @@
 			});
 		}
 
-		setTimeout(function(){
-
-		}, 2000);
-
-		function formSubmit() {
+		window.onbeforeunload = function (event) {
 			load_ajax();
-			setTimeout(function(){
-				document.getElementById("logoutForm").submit();
-			}, 500);
+		};
+
+		window.unload = function() {
+			load_ajax();
 		}
 	</script>
 
-	<c:url value="/logout" var="logoutUrl" />
-	<form action="${logoutUrl}" method="post" id="logoutForm">
-		<input type="hidden" name="${_csrf.parameterName}"
-			value="${_csrf.token}" />
-	</form>
-
-	</script>
-
-	<c:if test="${pageContext.request.userPrincipal.name != null}">
-		<h2>
-			Welcome : ${pageContext.request.userPrincipal.name} | <a href="javascript:formSubmit()"> Logout</a>
-		</h2>
-	</c:if>
-	<script type="application/javascript" src="js/jquery.js"></script>
-	<script type="application/javascript" src="js/bootstrap.js"></script>
 </body>
 </html>

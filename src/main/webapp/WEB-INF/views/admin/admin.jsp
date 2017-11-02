@@ -34,8 +34,7 @@
 
 	<c:if test="${pageContext.request.userPrincipal.name != null}">
 		<h2>
-			Welcome : ${pageContext.request.userPrincipal.name} | <a
-				href="javascript:formSubmit()"> Logout</a>
+			<button class="btn btn-primary"><a id="bt-login" href="javascript:formSubmit()">Đăng xuất</a></button>
 		</h2>
 	</c:if>
 

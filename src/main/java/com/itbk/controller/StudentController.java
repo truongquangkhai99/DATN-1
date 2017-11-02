@@ -35,17 +35,17 @@ public class StudentController {
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String studentTestGet(HttpServletRequest request, Model model) throws IOException {
-		examinations.clear();
-
 		// set timer when user shutting down PC that not yet finished the test
 		if(!studentService.findIsTestedByUsername(getUserName())) {
 			String timerStr = request.getParameter("timerLast");
 			if(timerStr != null) {
 				long timer = Long.parseLong(timerStr);
 				studentService.updateTimer(getUserName(), timer);
+				return "/student/test";
 			}
 		}
 
+		examinations.clear();
 		String group = getNameGroup();
 		List<Question> list = questionService.getExaminationByGroupId(group);
 		Map<Question, List<Answer>> map = new HashMap<>();
@@ -129,7 +129,7 @@ public class StudentController {
 		studentService.updateTimer(getUserName(), 0);
 
 		model.addAttribute("score", score);
-		return "/student/test";
+		return "redirect:/student/test";
 	}
 
 	public String getNameGroup() {

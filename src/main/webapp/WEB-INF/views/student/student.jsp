@@ -7,40 +7,54 @@
 		<title>Sinh viên</title>
 		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
+		<script type="application/javascript" src="/js/jquery.js"></script>
+		<script type="application/javascript" src="/js/bootstrap.js"></script>
 	</head>
 <body>
+	<%
+		boolean isTested = false;
+		if(request.getAttribute("isTested") != null) {
+			isTested = (boolean)request.getAttribute("isTested");
+		}
+		request.setAttribute("isStudent", request.isUserInRole("STUDENT"));
+	%>
+
 	<c:if test="${empty pageContext.request.userPrincipal.name}">
 		<c:redirect url = "/login"/>
 	</c:if>
-	
-	<% request.setAttribute("isStudent", request.isUserInRole("STUDENT")); %>
+
 	<c:if test="${!requestScope.isStudent}">
 		<c:redirect url = "/403"/>
 	</c:if>
 
-	<button class="btn btn-primary"><a id="bt-login" href="/student/test">Làm bài thi</a></button>
+	<div id='info-is-tested' style="font-weight: bold; font-size: 16px"></div>
 
-	<c:if test="${sessionScope.isTested}">
-	    <div id='info-create-group' style="color: red">Bạn đã thi rồi !</div>
+	<button id="student-test" class="btn btn-primary"><a id="bt-login" href="/student/test">Làm bài thi</a></button>
+
+	<form action="/logout" method="post" id="logoutForm">
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+	</form>
+
+	<c:if test="${pageContext.request.userPrincipal.name != null}">
+		<h2>
+			<button class="btn btn-primary"><a id="bt-login" href="javascript:formSubmit()">Đăng xuất</a></button>
+		</h2>
 	</c:if>
 
-	<c:url value="/logout" var="logoutUrl" />
-	<form action="${logoutUrl}" method="post" id="logoutForm">
-		<input type="hidden" name="${_csrf.parameterName}"
-			value="${_csrf.token}" />
-	</form>
 	<script>
+		if(<%=isTested%> === true) {
+			document.getElementById("student-test").style.display = 'none';
+			document.getElementById("info-is-tested").innerHTML  = 'BẠN ĐÃ LÀM BÀI THI !';
+			document.getElementById("info-is-tested").style.color = 'RED';
+		} else {
+			document.getElementById("info-is-tested").innerHTML  = 'BẠN CHƯA LÀM BÀI THI !';
+			document.getElementById("info-is-tested").style.color = 'BLUE';
+		}
+
 		function formSubmit() {
 			document.getElementById("logoutForm").submit();
 		}
 	</script>
 
-	<c:if test="${pageContext.request.userPrincipal.name != null}">
-		<h2>
-			Welcome : ${pageContext.request.userPrincipal.name} | <a href="javascript:formSubmit()"> Logout</a>
-		</h2>
-	</c:if>
-	<script type="application/javascript" src="js/jquery.js"></script>
-	<script type="application/javascript" src="js/bootstrap.js"></script>
 </body>
 </html>

@@ -1,14 +1,13 @@
 package com.itbk.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.itbk.model.User;
+import com.itbk.model.UserRole;
+import com.itbk.service.StudentService;
 import com.itbk.service.UserRoleService;
 import com.itbk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
 
 	private static boolean isStartApp = true;
+
+	@Autowired
+	StudentService studentService;
 
 	@Autowired
 	private UserRoleService userRoleService;
@@ -54,7 +56,8 @@ public class UserController {
 	// Controller for student
 	@RequestMapping(value = "/student", method = RequestMethod.GET)
 	public String studentPage(Model model) {
-		model.addAttribute("title", "This is Student page");
+		boolean isTested = studentService.findIsTestedByUsername(getUserName());
+		model.addAttribute("isTested", isTested);
 
 		return "/student/student";
 	}
@@ -73,22 +76,6 @@ public class UserController {
 		return "login";
 	}
 
-	// Controller for customize the error message
-	@SuppressWarnings("unused")
-	private String getErrorMessage(HttpServletRequest request, String key) {
-		Exception exception = (Exception) request.getSession().getAttribute(key);
-		String error = "";
-		if (exception instanceof BadCredentialsException) {
-			error = "Invalid username and password!";
-		} else if (exception instanceof LockedException) {
-			error = exception.getMessage();
-		} else {
-			error = "Invalid username and password!";
-		}
-
-		return error;
-	}
-
 	// Controller for 403 access denied page
 	@RequestMapping(value = "/403", method = RequestMethod.GET)
 	public String accesssDeniedPage(Model model) {
@@ -101,5 +88,17 @@ public class UserController {
 		}
 
 		return "403";
+	}
+
+	public String getUserName() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String userName = null;
+		if (principal instanceof UserDetails) {
+			userName = ((UserDetails) principal).getUsername();
+		} else {
+			userName = principal.toString();
+		}
+
+		return userName;
 	}
 }
