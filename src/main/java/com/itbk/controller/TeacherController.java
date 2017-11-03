@@ -115,8 +115,10 @@ public class TeacherController {
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String createExaminationGet(Model model) throws IOException {
-		ArrayList<String> groups = studentService.findGroupByNameTeacher(getNameTeacher());
-		model.addAttribute("groups", groups);
+		if(getNameTeacher() != null) {
+			ArrayList<String> groups = studentService.findGroupByNameTeacher(getNameTeacher());
+			model.addAttribute("groups", groups);
+		}
 
 		return "/teacher/test";
 	}
@@ -187,8 +189,10 @@ public class TeacherController {
 
 	@RequestMapping(value = "/preview", method = RequestMethod.GET)
 	public String previewExaminationGet(Model model) throws IOException {
-		ArrayList<String> arrayGroupStudent = studentService.findGroupByNameTeacher(getNameTeacher());
-		model.addAttribute("groups", arrayGroupStudent);
+		if (getNameTeacher() != null) {
+			ArrayList<String> arrayGroupStudent = studentService.findGroupByNameTeacher(getNameTeacher());
+			model.addAttribute("groups", arrayGroupStudent);
+		}
 
 		return "/teacher/preview";
 	}
@@ -214,8 +218,11 @@ public class TeacherController {
 	}
 
 	public String getNameTeacher() {
-		Teacher teacher = teacherService.findTeacherByUsername(getUserName());
-		return teacher.getName();
+		if(getUserName() != null) {
+			Teacher teacher = teacherService.findTeacherByUsername(getUserName());
+			return teacher.getName();
+		}
+		return  null;
 	}
 
 	public String getUserName() {
@@ -223,9 +230,8 @@ public class TeacherController {
 		String userName = null;
 		if (principal instanceof UserDetails) {
 			userName = ((UserDetails) principal).getUsername();
-		} else {
-			userName = principal.toString();
 		}
+
 		return userName;
 	}
 }

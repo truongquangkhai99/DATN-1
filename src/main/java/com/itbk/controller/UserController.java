@@ -56,8 +56,11 @@ public class UserController {
 	// Controller for student
 	@RequestMapping(value = "/student", method = RequestMethod.GET)
 	public String studentPage(Model model) {
-		boolean isTested = studentService.findIsTestedByUsername(getUserName());
-		model.addAttribute("isTested", isTested);
+		String userName = getUserName();
+		if(userName != null ) {
+			boolean isTested = studentService.findIsTestedByUsername(getUserName());
+			model.addAttribute("isTested", isTested);
+		}
 
 		return "/student/student";
 	}
@@ -95,8 +98,6 @@ public class UserController {
 		String userName = null;
 		if (principal instanceof UserDetails) {
 			userName = ((UserDetails) principal).getUsername();
-		} else {
-			userName = principal.toString();
 		}
 
 		return userName;

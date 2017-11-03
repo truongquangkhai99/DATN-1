@@ -36,12 +36,15 @@ public class StudentController {
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String studentTestGet(HttpServletRequest request, Model model) throws IOException {
 		// set timer when user shutting down PC that not yet finished the test
-		if(!studentService.findIsTestedByUsername(getUserName())) {
-			String timerStr = request.getParameter("timerLast");
-			if(timerStr != null) {
-				long timer = Long.parseLong(timerStr);
-				studentService.updateTimer(getUserName(), timer);
-				return "/student/test";
+		String userName = getUserName();
+		if(userName != null) {
+			if(!studentService.findIsTestedByUsername(getUserName())) {
+				String timerStr = request.getParameter("timerLast");
+				if(timerStr != null) {
+					long timer = Long.parseLong(timerStr);
+					studentService.updateTimer(getUserName(), timer);
+					return "/student/test";
+				}
 			}
 		}
 
@@ -78,8 +81,10 @@ public class StudentController {
 		}
 
 		model.addAttribute("examinations", examinations);
-		model.addAttribute("isTested", studentService.findIsTestedByUsername(getUserName()));
-		model.addAttribute("timer", studentService.findTimerByUsername(getUserName()));
+		if(userName != null) {
+			model.addAttribute("isTested", studentService.findIsTestedByUsername(getUserName()));
+			model.addAttribute("timer", studentService.findTimerByUsername(getUserName()));
+		}
 
 		return "/student/test";
 	}
@@ -141,9 +146,8 @@ public class StudentController {
 		String userName = null;
 		if (principal instanceof UserDetails) {
 			userName = ((UserDetails) principal).getUsername();
-		} else {
-			userName = principal.toString();
 		}
+
 		return userName;
 	}
 }
