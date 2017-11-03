@@ -123,7 +123,7 @@ public class Student {
 	}
 
 	@Column(name = "timer", unique = false, nullable = false)
-	public float getTimer() {
+	public long getTimer() {
 		return timer;
 	}
 

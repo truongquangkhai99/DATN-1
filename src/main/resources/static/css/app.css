@@ -1,9 +1,10 @@
 
 body {
 	width: 960px;
+	min-height: 768px;
 	margin: 0 auto;
-	margin-top: 20px;
 	background-color: #e0e0d9;
+	position: relative;
 }
 
 #bt-login {
@@ -11,13 +12,35 @@ body {
 	color: white;
 }
 
-#home-content {
+#header-content {
 	text-align: center;
+	position: relative;
+	top: 0px;
+    width: inherit;
 }
 
-.home-text-display {
-	color: #0b87e5;
+#footer-content {
+    text-align: center;
+    position: fixed;
+    bottom: 0px;
+    width: inherit;
+}
+
+#header-content-first {
+	color: #590a91;
 	font-weight: bold;
+	font-size: 20px;
+}
+
+#header-content-second {
+	color: #590a91;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+#footer-content-first {
+	color: #590a91;
+	font-size: 18px;
 }
 
 @import "bourbon";

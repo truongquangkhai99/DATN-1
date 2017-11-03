@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
 
@@ -216,6 +218,28 @@ public class TeacherController {
 
 		return "/teacher/preview";
 	}
+
+
+	@RequestMapping(value = "/output", method = RequestMethod.GET)
+	public String outputGet(Model model) throws IOException {
+		if (getNameTeacher() != null) {
+			ArrayList<String> arrayGroupStudent = studentService.findGroupByNameTeacher(getNameTeacher());
+			model.addAttribute("groups", arrayGroupStudent);
+		}
+
+		return "/teacher/output";
+	}
+
+	@RequestMapping(value = "/output", method = RequestMethod.POST)
+	public ModelAndView outputPost(@RequestParam("fileName") String fileName, @RequestParam("groupid") String groupid, HttpServletResponse response) throws IOException {
+		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
+		ArrayList<String> params = new ArrayList<>();
+		params.add(groupid);
+		params.add(fileName);
+
+		return new ModelAndView("excelPOIView", "params", params);
+	}
+
 
 	public String getNameTeacher() {
 		if(getUserName() != null) {

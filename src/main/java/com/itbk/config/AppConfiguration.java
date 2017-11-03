@@ -1,5 +1,6 @@
 package com.itbk.config;
 
+import com.itbk.view.ExcelPOIView;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -24,6 +25,11 @@ public class AppConfiguration extends WebMvcConfigurerAdapter {
 		resolver.setPrefix("/WEB-INF/views/");
 		resolver.setSuffix(".jsp");
 		return resolver;
+	}
+
+	@Bean
+	ExcelPOIView excelPOIView() {
+		return new ExcelPOIView();
 	}
 
 }

@@ -7,8 +7,13 @@
 		<title>Đăng nhập</title>
 		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
+		<script type="application/javascript" src="/js/jquery.js"></script>
+		<script type="application/javascript" src="/js/bootstrap.js"></script>
 	</head>
+
 	<body onload='document.loginForm.username.focus();'>
+		<%@ include file="header.jsp"%>
+
 		<div class="wrapper">
 			<form class="form-signin" name='loginForm' action="<c:url value='/login' />" method='POST'>
 				<c:if test="${param.error != null}">
@@ -16,7 +21,7 @@
 						<p>Tài khoản hoặc mật khẩu không đúng. Xin nhập lại!</p>
 					</div>
 				</c:if>
-				<h2 class="form-signin-heading">Vui lòng đăng nhập</h2>
+				<h2 class="form-signin-heading">Đăng nhập</h2>
 				<input type="text" class="form-control" name="username" placeholder="Tài khoản"/>
 				<input type="password" class="form-control" name="password" placeholder="Mật khẩu"/>
 				<label class="checkbox">
@@ -27,7 +32,7 @@
 			</form>
 		</div>
 
-		<script type="application/javascript" src="js/jquery.js"></script>
-		<script type="application/javascript" src="js/bootstrap.js"></script>
+		<%@ include file="footer.jsp"%>
 	</body>
+
 </html>
