@@ -3,11 +3,9 @@
 <%@ page session="true"%>
 
 <!DOCTYPE html >
+
 <html>
-	<head>
-		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
-		<link type="text/css" href="/css/app.css" rel="stylesheet" />
-	</head>
+	<%@ include file="head_tag.jsp"%>
 	<body>
 		<div class="panel panel-default" id="footer-content">
 			<p id="footer-content-first">© Bản quyền Khoa Công nghệ thông tin - Trường Đại học Bách khoa - Đại học Đà Nẵng</p>

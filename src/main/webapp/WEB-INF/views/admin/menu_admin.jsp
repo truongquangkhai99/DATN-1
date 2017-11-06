@@ -4,17 +4,32 @@
 
 <!DOCTYPE html >
 <html>
-	<head>
-		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
-		<link type="text/css" href="/css/app.css" rel="stylesheet" />
-	</head>
 	<body>
-		<ul class="nav nav-pills nav-stacked" style="width: 30%">
-			<li class="active"><a href="#">Home</a></li>
-			<li><a href="#">Menu 1</a></li>
-			<li><a href="#">Menu 2</a></li>
-			<li><a href="#">Menu 3</a></li>
-		</ul>
+
+		<div class="col-md-4">
+			<div id="MainMenu">
+				<div class="list-group panel">
+					<a href="#admin-menu" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý Admin<i class="fa fa-caret-down"></i></a>
+					<div class="collapse" id="admin-menu">
+						<a href="#" class="list-group-item">Thông tin chung</a>
+						<a href="#" class="list-group-item">Chỉnh sửa TT</a>
+						<a href="#" class="list-group-item">Thay đổi mật khẩu</a>
+					</div>
+
+					<a href="#admin-teacher" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý giảng viên<i class="fa fa-caret-down"></i></a>
+					<div class="collapse" id="admin-teacher">
+						<a href="#" class="list-group-item">Thông tin giảng viên</a>
+						<a href="/admin/create" class="list-group-item">Thêm giảng viên</a>
+						<a href="#" class="list-group-item">Chỉnh sửa giảng viên</a>
+						<a href="#" class="list-group-item">Xóa giảng viên</a>
+					</div>
+					<c:if test="${pageContext.request.userPrincipal.name != null}">
+						<a href="javascript:formSubmit()" class="list-group-item list-group-item-success" data-parent="#MainMenu">Thoát</a>
+					</c:if>
+				</div>
+			</div>
+		</div>
+
 	</body>
 </html>
 

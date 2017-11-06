@@ -3,15 +3,14 @@
 <%@ page session="true"%>
 
 <!DOCTYPE html >
+
 <html>
-	<head>
-		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
-		<link type="text/css" href="/css/app.css" rel="stylesheet" />
-	</head>
+	<%@ include file="head_tag.jsp"%>
 	<body>
+
 		<div class="panel panel-default" id="header-content">
-			<p id="header-content-first">TRƯỜNG ĐẠI HỌC BÁCH KHOA ĐÀ NẴNG</p>
-			<p id="header-content-second">KHOA CÔNG NGHỆ THÔNG TIN</p>
+			<p id="header-content-first">KHOA CÔNG NGHỆ THÔNG TIN - TRƯỜNG ĐẠI HỌC BÁCH KHOA ĐÀ NẴNG</p>
 		</div>
+
 	</body>
 </html>

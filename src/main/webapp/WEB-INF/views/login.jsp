@@ -1,17 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page session="true"%>
+<%@ page session="true"%>
+
 <!DOCTYPE html >
+
 <html>
-	<head>
-		<title>Đăng nhập</title>
-		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
-		<link type="text/css" href="/css/app.css" rel="stylesheet" />
-		<script type="application/javascript" src="/js/jquery.js"></script>
-		<script type="application/javascript" src="/js/bootstrap.js"></script>
-	</head>
+	<%@ include file="head_tag.jsp"%>
 
 	<body onload='document.loginForm.username.focus();'>
+
 		<%@ include file="header.jsp"%>
 
 		<div class="wrapper">
@@ -33,6 +30,7 @@
 		</div>
 
 		<%@ include file="footer.jsp"%>
+
 	</body>
 
 </html>
