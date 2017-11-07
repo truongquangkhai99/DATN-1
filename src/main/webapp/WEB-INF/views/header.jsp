@@ -5,7 +5,6 @@
 <!DOCTYPE html >
 
 <html>
-	<%@ include file="head_tag.jsp"%>
 	<body>
 
 		<div class="panel panel-default" id="header-content">

@@ -5,20 +5,24 @@
 <!DOCTYPE html >
 
 <html>
-	<%@ include file="../head_tag.jsp"%>
+	<head>
+		<title>Quản trị</title>
+		<%@ include file="../head_tag.jsp"%>
+	</head>
+
 	<body>
 
 		<%@ include file="../header.jsp"%>
 
-		<div class="container-fluid">
+		<div class="container-fluid" style="margin-top: 10px">
 			<div class="row">
-			<%@ include file="menu_admin.jsp"%>
+				<%@ include file="menu.jsp"%>
 			</div>
 		</div>
 
 		<%@ include file="../footer.jsp"%>
 
-		<%@ include file="content_admin.jsp"%>
+		<%@ include file="condition.jsp"%>
 
 	</body>
 

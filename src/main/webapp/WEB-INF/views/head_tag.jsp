@@ -6,7 +6,6 @@
 
 <html>
 	<head>
-		<title>Quản trị</title>
 		<link type="text/css" href="/css/bootstrap.css" rel="stylesheet" />
 		<link type="text/css" href="/css/app.css" rel="stylesheet" />
 		<script type="application/javascript" src="/js/jquery.js"></script>

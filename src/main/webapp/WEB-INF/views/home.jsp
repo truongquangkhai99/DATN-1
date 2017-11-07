@@ -5,7 +5,10 @@
 <!DOCTYPE html >
 
 <html>
-	<%@ include file="head_tag.jsp"%>
+	<head>
+		<title>Trảng chủ</title>
+		<%@ include file="../head_tag.jsp"%>
+	</head>
 	<body>
 
 		<% request.setAttribute("isAdmin", request.isUserInRole("ADMIN")); %>

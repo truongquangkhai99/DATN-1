@@ -5,7 +5,10 @@
 <!DOCTYPE html >
 
 <html>
-	<%@ include file="head_tag.jsp"%>
+	<head>
+		<title>Đăng nhập</title>
+		<%@ include file="../head_tag.jsp"%>
+	</head>
 
 	<body onload='document.loginForm.username.focus();'>
 
@@ -20,7 +23,7 @@
 				</c:if>
 				<h2 class="form-signin-heading">Đăng nhập</h2>
 				<input type="text" class="form-control" name="username" placeholder="Tài khoản"/>
-				<input type="password" class="form-control" name="password" placeholder="Mật khẩu"/>
+				<input type="password" class="form-control" name="password" placeholder="Mật khẩu" style="margin-top: 10px;"/>
 				<label class="checkbox">
 				<% //<input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Lưu mật khẩu%>
 				</label>
