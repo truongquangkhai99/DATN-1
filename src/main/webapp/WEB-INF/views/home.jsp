@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<title>Trảng chủ</title>
-		<%@ include file="../head_tag.jsp"%>
+		<%@ include file="head_tag.jsp"%>
 	</head>
 	<body>
 

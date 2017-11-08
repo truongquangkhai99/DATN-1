@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<title>Đăng nhập</title>
-		<%@ include file="../head_tag.jsp"%>
+		<%@ include file="head_tag.jsp"%>
 	</head>
 
 	<body onload='document.loginForm.username.focus();'>

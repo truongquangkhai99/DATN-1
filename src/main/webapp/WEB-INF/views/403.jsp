@@ -7,7 +7,7 @@
 <html>
 	<head>
         <title>Lỗi truy cập</title>
-        <%@ include file="../head_tag.jsp"%>
+        <%@ include file="head_tag.jsp"%>
     </head>
 
 	<body>
