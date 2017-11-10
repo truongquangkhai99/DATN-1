@@ -18,7 +18,7 @@
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 					<div class="form-group">
 						<label for="sel1">Chọn nhóm thi:</label>
-						<select class="form-control" id="sel1" name="groupid">
+						<select class="form-control" id="sel1" name="group">
 							<c:forEach items="${groups}" var="group" varStatus="itr">
 								<option>${group}</option>
 							</c:forEach>

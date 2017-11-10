@@ -6,7 +6,7 @@
 
 <html>
 	<head>
-		<title>Giảng viên - Xuất file theo từng nhóm</title>
+		<title>Giảng viên - Thêm nhóm sinh viên</title>
 		<%@ include file="../head_tag.jsp"%>
 	</head>
 	<body>
@@ -19,21 +19,14 @@
 
 				<div class="col-md-8">
 					<div class="bs-example well">
-						<form class="form-create" name='createForm' action="/teacher/output" method="POST">
+						<form class="form-create" name='createForm' action="/teacher/create_all" method="POST" enctype="multipart/form-data">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-							<div class="form-group">
-								<label for="sel1">Chọn nhóm thi:</label>
-								<select class="form-control" id="sel1" name="group">
-									<c:forEach items="${groups}" var="group" varStatus="itr">
-										<option>${group}</option>
-									</c:forEach>
-								</select>
-							</div>
+							<input type="hidden" name="group"/>
 
 							<div class="form-group">
-								<label for="namefile">Tên file cần xuất:</label>
-								<input type="input" class="form-control" id="namefile" name="fileName" placeholder="Tên file cần xuất ra">
+								<label for="inputfile">Duyệt file excel:</label>
+								<input type="file" class="form-control" id="inputfile" name="file" placeholder="Duyệt file excel" accept=".xls,.xlsx">
 							</div>
 
 							<div>
@@ -42,10 +35,10 @@
 							</div>
 
 							<c:if test="${success != null && success}">
-								<div style="color: blue">Xuất file thành công</div>
+								<div style="color: blue">Thêm nhóm thành công</div>
 							</c:if>
 							<c:if test="${success != null && !success}">
-								<div style="color: red">Xuất file không thành công</div>
+								<div style="color: red">Thêm nhóm không thành công</div>
 							</c:if>
 						</form>
 					</div>

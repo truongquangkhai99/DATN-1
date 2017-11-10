@@ -1,5 +1,6 @@
 package com.itbk.controller;
 
+import com.itbk.constant.Constant;
 import com.itbk.model.Teacher;
 import com.itbk.model.User;
 import com.itbk.model.UserRole;
@@ -41,7 +42,7 @@ public class AdminController {
 
 		User user = new User(account, password, true);
 		userService.saveUser(user);
-		UserRole userRole = new UserRole(user, "ROLE_TEACHER");
+		UserRole userRole = new UserRole(user, Constant.RoleType.ROLE_TEACHER);
 		userRoleService.saveUserRole(userRole);
 		Teacher teacher = new Teacher(name, account, password);
 		teacherService.saveTeacher(teacher);

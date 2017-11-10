@@ -3,6 +3,7 @@ package com.itbk.controller;
 import com.itbk.dto.Examination;
 import com.itbk.model.Answer;
 import com.itbk.model.Question;
+import com.itbk.service.GroupService;
 import com.itbk.service.QuestionService;
 import com.itbk.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class StudentController {
 	@Autowired
 	QuestionService questionService;
 
+	@Autowired
+	GroupService groupService;
+
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String studentTestGet(HttpServletRequest request, Model model) throws IOException {
 		// set timer when user shutting down PC that not yet finished the test
@@ -49,8 +53,8 @@ public class StudentController {
 		}
 
 		examinations.clear();
-		String group = getNameGroup();
-		List<Question> list = questionService.getExaminationByGroupId(group);
+		String group = groupService.findGroupById(studentService.findGroupIdByUserName(getUserName())).getName();
+		List<Question> list = questionService.getExaminationByGroupName(group);
 		Map<Question, List<Answer>> map = new HashMap<>();
 
 		for (Question a : list) {
@@ -135,10 +139,6 @@ public class StudentController {
 
 		model.addAttribute("score", score);
 		return "redirect:/student/test";
-	}
-
-	public String getNameGroup() {
-		return studentService.findGroupByUserName(getUserName());
 	}
 
 	public String getUserName() {

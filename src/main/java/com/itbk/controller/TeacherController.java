@@ -3,13 +3,9 @@ package com.itbk.controller;
 import com.itbk.dto.Examination;
 import com.itbk.model.*;
 import com.itbk.service.*;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -20,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
@@ -29,96 +26,94 @@ import java.util.*;
 public class TeacherController {
 
 	@Autowired
+	private GroupService groupService;
+
+	@Autowired
 	private StudentService studentService;
 
 	@Autowired
-	private UserRoleService userRoleService;
+	private HandleFileExelService handleFileExelService;
 
 	@Autowired
-	@Qualifier("userService")
-	private UserService userService;
+	private QuestionService questionService;
 
 	@Autowired
-	QuestionService questionService;
+	private AnswerService answerService;
 
 	@Autowired
-	AnswerService answerService;
-
-	@Autowired
-	TeacherService teacherService;
+	private TeacherService teacherService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String createGroupGet(Model model) throws IOException {
+	public String createGroupGet(HttpServletRequest request, Model model) throws IOException {
+
 		return "/teacher/create";
 	}
 
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String createGroupPost(@RequestParam("file") MultipartFile file, @RequestParam("groupid") String id, Model model) {
+	public String createGroupPost(@RequestParam("file") MultipartFile file, @RequestParam("group") String group, Model model) {
 		if (!file.isEmpty()) {
-			try {
-				Workbook workbook = new HSSFWorkbook(file.getInputStream());
-				Sheet sheet = workbook.getSheetAt(0);
-				String string = "###";
-
-				for (Row row : sheet) {
-					if(row.getRowNum() == 0) continue;
-					Student student = new Student();
-					for (Cell cell : row) {
-						switch (cell.getCellTypeEnum()) {
-							case STRING:
-								string = cell.toString();
-								break;
-							case NUMERIC:
-								if (DateUtil.isCellDateFormatted(cell)) {
-									string = cell.toString();
-								} else {
-									string = NumberToTextConverter.toText(cell.getNumericCellValue());
-								}
-								break;
-						}
-						switch (cell.getColumnIndex()) {
-							case 1:
-								student.setIdB(string);
-								break;
-							case 2:
-								student.setName(string);
-								break;
-							case 3:
-								student.setDateOfBirth(string);
-								break;
-							case 4:
-								student.setClassStd(string);
-								break;
-						}
-					}
-					student.setTeacher(getNameTeacher());
-					student.setGroup(id);
-					studentService.save(student);
-					User user = new User(student.getIdB(), student.getDateOfBirth(), true);
-					userService.saveUser(user);
-					UserRole userRole = new UserRole(user, "ROLE_STUDENT");
-					userRoleService.saveUserRole(userRole);
-				}
-				workbook.close();
+			boolean resultReadFileExel = false;
+			Teacher teacher = teacherService.findTeacherByUsername(getUserName());
+			if(group != null) {
+				Group groupObj = new Group(group);
+				groupObj.setTeacher(teacher);
+				groupService.saveGroup(groupObj);
+				resultReadFileExel = handleFileExelService.readFileExel(file, teacher, groupObj, true);
+			}
+			if(resultReadFileExel) {
 				model.addAttribute("success", true);
 				return "/teacher/create";
-			} catch (Exception e) {
-				System.out.println("loi tai day: " + e.getMessage());
+
+			} else {
 				model.addAttribute("success", false);
 				return "/teacher/create";
 			}
-
 		} else {
 			model.addAttribute("success", false);
 			return "/teacher/create";
 		}
 	}
 
+	// createAlGroup start
+	@RequestMapping(value = "/create_all", method = RequestMethod.GET)
+	public String createAllGroupGet(HttpServletRequest request, Model model) throws IOException {
+
+		return "/teacher/create_all";
+	}
+
+	@SuppressWarnings({ "deprecation", "incomplete-switch" })
+	@RequestMapping(value = "/create_all", method = RequestMethod.POST)
+	public String createAllGroupPost(@RequestParam("file") MultipartFile file, @RequestParam("group") String group, Model model) {
+		if (!file.isEmpty()) {
+			boolean resultReadFileExel = false;
+			Teacher teacher = teacherService.findTeacherByUsername(getUserName());
+			if(group == null || group.equals("")) {
+				resultReadFileExel = handleFileExelService.readFileExel(file, teacher, null, false);
+			}
+			if(resultReadFileExel) {
+				model.addAttribute("success", true);
+				return "/teacher/create_all";
+			} else {
+				model.addAttribute("success", false);
+				return "/teacher/create_all";
+			}
+		} else {
+			model.addAttribute("success", false);
+			return "/teacher/create_all";
+		}
+	}
+	// createAlGroup finish
+
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String createExaminationGet(Model model) throws IOException {
-		if(getNameTeacher() != null) {
-			ArrayList<String> groups = studentService.findGroupByNameTeacher(getNameTeacher());
+		if(getUserName() != null) {
+			Teacher teacher = teacherService.findGroupIdByUsername(getUserName());
+			ArrayList<String> groups = new ArrayList<>();
+			for(Group group : teacher.getGroups()) {
+				groups.add(group.getName());
+			}
+
 			model.addAttribute("groups", groups);
 		}
 
@@ -128,7 +123,7 @@ public class TeacherController {
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/test", method = RequestMethod.POST)
 	public String createExaminationPost(@RequestParam("file") MultipartFile file, @RequestParam("timer") String timer,
-				@RequestParam("groupid") String group, Model model) {
+				@RequestParam("group") String group, Model model) {
 		if (!file.isEmpty()) {
 			XWPFDocument document = null;
 			FileInputStream fileInputStream = null;
@@ -164,7 +159,9 @@ public class TeacherController {
 					}
 				}
 				//set timer for student
-				studentService.updateTimerForGroup(Long.parseLong(timer) * 60, group);
+
+				studentService.updateTimerForGroupId(Long.parseLong(timer) * 60, groupService.findGroupByGroupName(group).getId());
+
 
 				model.addAttribute("success", true);
 				return "/teacher/test";
@@ -191,17 +188,21 @@ public class TeacherController {
 
 	@RequestMapping(value = "/preview", method = RequestMethod.GET)
 	public String previewExaminationGet(Model model) throws IOException {
-		if (getNameTeacher() != null) {
-			ArrayList<String> arrayGroupStudent = studentService.findGroupByNameTeacher(getNameTeacher());
-			model.addAttribute("groups", arrayGroupStudent);
+		if (getUserName() != null) {
+			Teacher teacher = teacherService.findTeacherByUsername(getUserName());
+			ArrayList<String> groups = new ArrayList<>();
+			for(Group group : teacher.getGroups()) {
+				groups.add(group.getName());
+			}
+			model.addAttribute("groups", groups);
 		}
 
 		return "/teacher/preview";
 	}
 
 	@RequestMapping(value = "/preview", method = RequestMethod.POST)
-	public String previewExaminationPost(@RequestParam("groupid") String group, Model model) throws IOException {
-		List<Question> list = questionService.getExaminationByGroupId(group);
+	public String previewExaminationPost(@RequestParam("group") String group, Model model) throws IOException {
+		List<Question> list = questionService.getExaminationByGroupName(group);
 		Map<Question, List<Answer>> map = new HashMap<>();
 		ArrayList<Examination> examinations = new ArrayList<>();
 		int count = 0;
@@ -222,31 +223,26 @@ public class TeacherController {
 
 	@RequestMapping(value = "/output", method = RequestMethod.GET)
 	public String outputGet(Model model) throws IOException {
-		if (getNameTeacher() != null) {
-			ArrayList<String> arrayGroupStudent = studentService.findGroupByNameTeacher(getNameTeacher());
-			model.addAttribute("groups", arrayGroupStudent);
+		if (getUserName() != null) {
+			Teacher teacher = teacherService.findTeacherByUsername(getUserName());
+			ArrayList<String> groups = new ArrayList<>();
+			for(Group group : teacher.getGroups()) {
+				groups.add(group.getName());
+			}
+			model.addAttribute("groups", groups);
 		}
 
 		return "/teacher/output";
 	}
 
 	@RequestMapping(value = "/output", method = RequestMethod.POST)
-	public ModelAndView outputPost(@RequestParam("fileName") String fileName, @RequestParam("groupid") String groupid, HttpServletResponse response) throws IOException {
+	public ModelAndView outputPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group, HttpServletResponse response) throws IOException {
 		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
-		ArrayList<String> params = new ArrayList<>();
-		params.add(groupid);
+		ArrayList<Object> params = new ArrayList<>();
+		params.add(groupService.findGroupByGroupName(group).getId());
 		params.add(fileName);
 
 		return new ModelAndView("excelPOIView", "params", params);
-	}
-
-
-	public String getNameTeacher() {
-		if(getUserName() != null) {
-			Teacher teacher = teacherService.findTeacherByUsername(getUserName());
-			return teacher.getName();
-		}
-		return  null;
 	}
 
 	public String getUserName() {

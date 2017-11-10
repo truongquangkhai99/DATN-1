@@ -11,7 +11,7 @@ public interface StudentService {
 
 	Object findAll();
 
-	ArrayList<Student> findAllByGroup(String group);
+	ArrayList<Student> findAllByGroupId(int groupId);
 
 	Student save(Student student);
 
@@ -19,13 +19,11 @@ public interface StudentService {
 
 	ArrayList<String> findAllGroupId();
 
-	String findGroupByUserName(String userName);
-
-	ArrayList<String> findGroupByNameTeacher(String teacherName);
+	int findGroupIdByUserName(String userName);
 
 	void updateScore(String userName, double score);
 
-	void updateTimerForGroup(long timer, String group);
+	void updateTimerForGroupId(long timer, int groupId);
 
 	void updateIsTested(String userName, boolean isTested);
 

@@ -3,6 +3,7 @@ package com.itbk.model;
 import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by PC on 10/26/2017.
@@ -16,6 +17,7 @@ public class Teacher {
 	private String name;
 	private String account;
 	private String password;
+	private Set<Group> groups;
 
 	public Teacher() {}
 
@@ -46,7 +48,7 @@ public class Teacher {
 		this.name = name;
 	}
 
-	@Column(name = "account", nullable = false)
+	@Column(name = "account", unique = true, nullable = false)
 	public String getAccount() {
 		return account;
 	}
@@ -62,5 +64,14 @@ public class Teacher {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
+	public Set<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
 	}
 }

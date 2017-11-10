@@ -134,6 +134,11 @@ body {
 	float: right;
 }
 
+.arrow-right {
+	width: 8px;
+	margin-right: 5px;
+}
+
 .radio-test {
 	display: inline;
 	margin-right: 5px

@@ -26,13 +26,13 @@ public class ExcelPOIView extends AbstractView {
 
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ArrayList<String> params = (ArrayList<String>)model.get("params");
+		ArrayList<Object> params = (ArrayList<Object>)model.get("params");
 		setContentType(CONTENT_TYPE_XLSX);
 		Workbook workbook = new XSSFWorkbook();
 
 		CellStyle headerStyle = workbook.createCellStyle();
 
-		Sheet sheet = getSheet(workbook, headerStyle, params.get(1));
+		Sheet sheet = getSheet(workbook, headerStyle, (String)params.get(1));
 
 		Row header = sheet.createRow(0);
 
@@ -41,7 +41,7 @@ public class ExcelPOIView extends AbstractView {
 		CellStyle style = workbook.createCellStyle();
 		style.setWrapText(true);
 
-		createRowInfo(sheet, style, params.get(0));
+		createRowInfo(sheet, style, (int)params.get(0));
 
 		response.setContentType(CONTENT_TYPE_XLSX);
 
@@ -56,8 +56,8 @@ public class ExcelPOIView extends AbstractView {
 		return true;
 	}
 
-	public void createRowInfo(Sheet sheet, CellStyle style, String group) {
-		ArrayList<Student> students = studentService.findAllByGroup(group);
+	public void createRowInfo(Sheet sheet, CellStyle style, int groupId) {
+		ArrayList<Student> students = studentService.findAllByGroupId(groupId);
 		int size = students.size();
 		for(int i = 0; i < size; i++) {
 			Row row = sheet.createRow((i+1));

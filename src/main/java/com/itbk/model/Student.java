@@ -13,7 +13,7 @@ public class Student {
 	private String dateOfBirth;
 	private String classStd;
 	private String teacher;
-	private String group;
+	private Group group;
 	private boolean isTested;
 	private double score;
 	private long timer;
@@ -24,14 +24,13 @@ public class Student {
 		this.timer = 3600; //60 minute
 	}
 
-	public Student(Integer idT, String idB, String name, String dateOfBirth, String classStudent, String teacher, String group) {
+	public Student(Integer idT, String idB, String name, String dateOfBirth, String classStudent, String teacher) {
 		this.idT = idT;
 		this.idB = idB;
 		this.name = name;
 		this.dateOfBirth = dateOfBirth;
 		this.classStd = classStudent;
 		this.teacher = teacher;
-		this.group = group;
 		this.isTested = false;
 		this.score = 0;
 		this.timer = 3600; //60 minute
@@ -85,6 +84,16 @@ public class Student {
 		this.classStd = classStudent;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "group_id", nullable = false)
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
 	@Nationalized
 	@Column(name = "teacher", unique = false, nullable = false)
 	public String getTeacher() {
@@ -93,15 +102,6 @@ public class Student {
 
 	public void setTeacher(String teacher) {
 		this.teacher = teacher;
-	}
-
-	@Column(name = "groups", unique = false, nullable = false)
-	public String getGroup() {
-		return group;
-	}
-
-	public void setGroup(String group) {
-		this.group = group;
 	}
 
 	@Column(name = "is_tested", unique = false, nullable = false)

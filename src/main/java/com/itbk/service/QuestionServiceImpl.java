@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,12 +28,7 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
-	public Object findAll() {
-		return questionRepository.findAll();
-	}
-
-	@Override
-	public List<Question> getExaminationByGroupId(String groupId) {
-		return questionRepository.getExaminationByGroupId(groupId);
+	public List<Question> getExaminationByGroupName(String groupId) {
+		return questionRepository.getExaminationByGroupName(groupId);
 	}
 }

@@ -24,7 +24,7 @@
 
 							<div class="form-group">
 								<label for="inputName">Tên nhóm thi:</label>
-								<input type="input" class="form-control" id="inputName" name="groupid" placeholder="Tên nhóm thi">
+								<input type="input" class="form-control" id="inputName" name="group" placeholder="Tên nhóm thi">
 							</div>
 
 							<div class="form-group">

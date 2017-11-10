@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Created by PC on 10/25/2017.
  */
 @Component
-@Service("groupStudentService")
+@Service("studentService")
 public class StudentServiceImpl implements StudentService {
 
 	@Autowired
@@ -24,8 +24,8 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public ArrayList<Student> findAllByGroup(String group) {
-		return studentRepository.findAllByGroup(group);
+	public ArrayList<Student> findAllByGroupId(int groupId) {
+		return studentRepository.findAllByGroupId(groupId);
 	}
 
 	@Override
@@ -44,13 +44,8 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public String findGroupByUserName(String userName) {
-		return studentRepository.findGroupByUserName(userName);
-	}
-
-	@Override
-	public ArrayList<String> findGroupByNameTeacher(String teacherName) {
-		return studentRepository.findGroupByNameTeacher(teacherName);
+	public int findGroupIdByUserName(String userName) {
+		return studentRepository.findGroupIdByUserName(userName);
 	}
 
 	@Override
@@ -59,8 +54,8 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public void updateTimerForGroup(long timer, String group) {
-		studentRepository.updateTimerForGroup(timer, group);
+	public void updateTimerForGroupId(long timer, int groupId) {
+		studentRepository.updateTimerForGroupId(timer, groupId);
 	}
 
 	@Override

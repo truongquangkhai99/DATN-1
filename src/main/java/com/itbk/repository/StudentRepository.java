@@ -19,14 +19,14 @@ public interface StudentRepository extends CrudRepository<Student, Integer> {
 	@SuppressWarnings("unchecked")
 	Student save(Student student);
 
-	@Query(value="SELECT * FROM students where groups = :group", nativeQuery = true)
-	ArrayList<Student> findAllByGroup(@Param("group") String group);
+	@Query(value="SELECT * FROM students where group_id = :groupId", nativeQuery = true)
+	ArrayList<Student> findAllByGroupId(@Param("groupId") int groupId);
 
-	@Query(value="SELECT DISTINCT groups FROM students", nativeQuery = true)
+	@Query(value="SELECT DISTINCT group_id FROM students", nativeQuery = true)
 	ArrayList<String> findAllGroupId();
 
-	@Query(value="SELECT DISTINCT groups FROM students where idb = :userName", nativeQuery = true)
-	String findGroupByUserName(@Param("userName") String userName);
+	@Query(value="SELECT group_id FROM students where idb = :userName", nativeQuery = true)
+	int findGroupIdByUserName(@Param("userName") String userName);
 
 	@Modifying
 	@Transactional
@@ -46,13 +46,10 @@ public interface StudentRepository extends CrudRepository<Student, Integer> {
 	@Query(value="SELECT is_tested FROM students where idb = :userName", nativeQuery = true)
 	boolean findIsTestedByUsername(@Param("userName") String userName);
 
-	@Query(value="SELECT DISTINCT groups FROM students where teacher = :teacherName", nativeQuery = true)
-	ArrayList<String> findGroupByNameTeacher(@Param("teacherName") String teacherName);
-
 	@Modifying
 	@Transactional
-	@Query(value="UPDATE students SET timer = :timer where groups = :group", nativeQuery = true)
-	void updateTimerForGroup(@Param("timer") long timer, @Param("group") String group);
+	@Query(value="UPDATE students SET timer = :timer where group_id = :groupid", nativeQuery = true)
+	void updateTimerForGroupId(@Param("timer") long timer, @Param("groupid") int groupId);
 
 	@Query(value="SELECT timer FROM students where idb = :userName", nativeQuery = true)
 	long findTimerByUsername(@Param("userName") String userName);

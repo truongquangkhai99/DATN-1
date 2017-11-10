@@ -15,8 +15,8 @@
 
 						<a href="#group-type" class="list-group-item" data-toggle="collapse" data-parent="#group-student">Thêm nhóm sinh viên<img src="/image/arrow_down.png" class="arrow-down"></a>
 						<div class="collapse" id="group-type">
-							<a href="/teacher/create" class="list-group-item" data-parent="#group-type">Thêm từng nhóm</a>
-							<a href="#" class="list-group-item" data-parent="#group-type">Thêm toàn bộ</a>
+							<a href="/teacher/create" class="list-group-item list-group-item-warning" data-parent="#group-type"><img src="/image/arrow_right.png" class="arrow-right">Thêm từng nhóm</a>
+							<a href="/teacher/create_all" class="list-group-item list-group-item-warning" data-parent="#group-type"><img src="/image/arrow_right.png" class="arrow-right">Thêm toàn bộ</a>
 						</div>
 
 						<a href="#" class="list-group-item" >Sửa nhóm sinh viên</a>

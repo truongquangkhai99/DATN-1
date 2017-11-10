@@ -29,13 +29,6 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	public User(String username, String password, boolean enabled, Set<UserRole> userRole) {
-		this.username = username;
-		this.password = password;
-		this.enabled = enabled;
-		this.userRole = userRole;
-	}
-
 	@Id
 	@Column(name = "username", unique = true, nullable = false)
 	public String getUsername() {
