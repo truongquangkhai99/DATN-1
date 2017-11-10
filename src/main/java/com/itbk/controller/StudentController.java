@@ -54,7 +54,7 @@ public class StudentController {
 
 		examinations.clear();
 		String group = groupService.findGroupById(studentService.findGroupIdByUserName(getUserName())).getName();
-		List<Question> list = questionService.getExaminationByGroupName(group);
+		List<Question> list = questionService.getExaminationByGroupId(groupService.findGroupByGroupName(group).getId());
 		Map<Question, List<Answer>> map = new HashMap<>();
 
 		for (Question a : list) {

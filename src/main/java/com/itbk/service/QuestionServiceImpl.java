@@ -28,7 +28,7 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
-	public List<Question> getExaminationByGroupName(String groupId) {
-		return questionRepository.getExaminationByGroupName(groupId);
+	public List<Question> getExaminationByGroupId(int groupId) {
+		return questionRepository.getExaminationByGroupId(groupId);
 	}
 }

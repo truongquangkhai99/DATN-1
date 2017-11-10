@@ -17,11 +17,21 @@ public class Group {
 	private String name;
 	private Teacher teacher;
 	private Set<Student> students;
+	private Set<Question> questions;
 
 	public Group() {}
 
 	public Group(String name) {
 		this.name = name;
+	}
+
+	@ManyToMany(mappedBy = "groups")
+	public Set<Question> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(Set<Question> questions) {
+		this.questions = questions;
 	}
 
 	@Id

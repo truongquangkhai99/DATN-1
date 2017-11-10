@@ -5,6 +5,7 @@ import org.hibernate.annotations.Nationalized;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by PC on 10/27/2017.
@@ -14,16 +15,28 @@ import java.util.List;
 public class Question {
 	private Integer id;
 	private String name;
-	private String group;
 	private boolean isRadio;
 	private List<Answer> answers = new ArrayList<>();
+	private Set<Group> groups;
 
 	public Question() {}
 
-	public Question(String name, String group, boolean isRadio) {
+	public Question(String name, boolean isRadio) {
 		this.name = name;
-		this.group = group;
 		this.isRadio = isRadio;
+	}
+	@ManyToMany
+	@JoinTable(
+		name = "group_question",
+		joinColumns = @JoinColumn(name = "question_id"),
+		inverseJoinColumns = @JoinColumn(name = "group_id")
+	)
+	public Set<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
 	}
 
 	@Id
@@ -45,15 +58,6 @@ public class Question {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@Column(name = "group_student", unique = false, nullable = false)
-	public String getGroup() {
-		return group;
-	}
-
-	public void setGroup(String group) {
-		this.group = group;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "question")

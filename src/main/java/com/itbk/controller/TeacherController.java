@@ -3,8 +3,6 @@ package com.itbk.controller;
 import com.itbk.dto.Examination;
 import com.itbk.model.*;
 import com.itbk.service.*;
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +40,9 @@ public class TeacherController {
 
 	@Autowired
 	private TeacherService teacherService;
+
+	@Autowired
+	HandleFileWordService handleFileWordService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String createGroupGet(HttpServletRequest request, Model model) throws IOException {
@@ -125,66 +126,53 @@ public class TeacherController {
 	public String createExaminationPost(@RequestParam("file") MultipartFile file, @RequestParam("timer") String timer,
 				@RequestParam("group") String group, Model model) {
 		if (!file.isEmpty()) {
-			XWPFDocument document = null;
-			FileInputStream fileInputStream = null;
-			try {
-				fileInputStream = (FileInputStream)(file.getInputStream());
-				document = new XWPFDocument(fileInputStream);
-				XWPFWordExtractor extractor = new XWPFWordExtractor(document);
-				String content = extractor.getText();
-				String [] arrayQuestion = content.split("###");
-				int numberOfQuestion = arrayQuestion.length;
-				for(int i = 1; i < numberOfQuestion; i++) {
-					String arrayResult[] = arrayQuestion[i].split("XXX");
-					int countRightQuestion = 0;
-					for(int k = 0; k < arrayResult.length; k++) {
-						if(arrayResult[k].charAt(0) == '=') {
-							countRightQuestion++;
-						}
-					}
-					for(int j = 0; j < arrayResult.length; j++) {
-						if(j == 0) {
-							if(countRightQuestion >= 2) {
-								questionService.saveQuestion(new Question(arrayResult[j].toString(), group, false));
-							} else {
-								questionService.saveQuestion(new Question(arrayResult[j].toString(), group, true));
-							}
-						} else {
-							if(arrayResult[j].charAt(0) == '=') {
-								answerService.saveAnswer(new Answer(questionService.findLastest().getId(), arrayResult[j].substring(1),true));
-							} else {
-								answerService.saveAnswer(new Answer(questionService.findLastest().getId(), arrayResult[j].substring(1),false));
-							}
-						}
-					}
-				}
-				//set timer for student
-
-				studentService.updateTimerForGroupId(Long.parseLong(timer) * 60, groupService.findGroupByGroupName(group).getId());
-
-
+			boolean resultReadFileWord= false;
+			if(group != null) {
+				resultReadFileWord = handleFileWordService.readFileWord(file, teacherService.findTeacherByUsername(getUserName()), groupService.findGroupByGroupName(group), timer);
+			}
+			if(resultReadFileWord) {
 				model.addAttribute("success", true);
 				return "/teacher/test";
-			} catch (Exception e) {
+			} else {
 				model.addAttribute("success", false);
-				System.out.println("vinh err: " + e.getMessage());
 				return "/teacher/test";
-			} finally {
-				try {
-					if (document != null) {
-						document.close();
-					}
-					if (fileInputStream != null) {
-						fileInputStream.close();
-					}
-				} catch (Exception ex) {
-				}
 			}
+
 		} else {
 			model.addAttribute("success", false);
 			return "/teacher/test";
 		}
 	}
+
+	@RequestMapping(value = "/test_all", method = RequestMethod.GET)
+	public String createExaminationAllGet(Model model) throws IOException {
+
+		return "/teacher/test_all";
+	}
+
+	@SuppressWarnings({ "deprecation", "incomplete-switch" })
+	@RequestMapping(value = "/test_all", method = RequestMethod.POST)
+	public String createExaminationAllPost(@RequestParam("file") MultipartFile file, @RequestParam("timer") String timer,
+										@RequestParam("group") String group, Model model) {
+		if (!file.isEmpty()) {
+			boolean resultReadFileWord= false;
+			if(group == null || group.equals("")) {
+				resultReadFileWord = handleFileWordService.readFileWord(file, teacherService.findTeacherByUsername(getUserName()), null, timer);
+			}
+			if(resultReadFileWord) {
+				model.addAttribute("success", true);
+				return "/teacher/test_all";
+			} else {
+				model.addAttribute("success", false);
+				return "/teacher/test_all";
+			}
+		} else {
+			model.addAttribute("success", false);
+			return "/teacher/test_all";
+		}
+	}
+
+
 
 	@RequestMapping(value = "/preview", method = RequestMethod.GET)
 	public String previewExaminationGet(Model model) throws IOException {
@@ -202,7 +190,7 @@ public class TeacherController {
 
 	@RequestMapping(value = "/preview", method = RequestMethod.POST)
 	public String previewExaminationPost(@RequestParam("group") String group, Model model) throws IOException {
-		List<Question> list = questionService.getExaminationByGroupName(group);
+		List<Question> list = questionService.getExaminationByGroupId(groupService.findGroupByGroupName(group).getId());
 		Map<Question, List<Answer>> map = new HashMap<>();
 		ArrayList<Examination> examinations = new ArrayList<>();
 		int count = 0;

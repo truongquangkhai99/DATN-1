@@ -13,5 +13,5 @@ public interface QuestionService {
 
 	Question findLastest();
 
-	List<Question> getExaminationByGroupName(String group);
+	List<Question> getExaminationByGroupId(int groupId);
 }

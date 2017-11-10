@@ -19,7 +19,7 @@ public interface QuestionRepository extends CrudRepository<Question, Integer> {
 	@Query(value="SELECT top 1 * FROM questions ORDER BY id DESC", nativeQuery = true)
 	Question findLastest();
 
-	@Query(value="SELECT distinct q FROM Question q join fetch q.answers where q.group = :group")
-	List<Question> getExaminationByGroupName(@Param("group") String group);
+	@Query(value="SELECT distinct q FROM Question q join fetch q.answers join fetch q.groups g where g.id = :groupId")
+	List<Question> getExaminationByGroupId(@Param("groupId") int groupId);
 
 }

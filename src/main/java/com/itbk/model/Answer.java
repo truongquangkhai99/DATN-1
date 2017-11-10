@@ -18,11 +18,9 @@ public class Answer {
 
 	public Answer() {}
 
-	public Answer(Integer idQuestion, String answer, boolean exactly) {
+	public Answer(String answer, boolean exactly) {
 		this.answer = answer;
 		this.exactly = exactly;
-		this.question = new Question();
-		this.question.setId(idQuestion);
 	}
 
 	@Id

@@ -26,7 +26,13 @@
 					<a href="#examination" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý đề thi<img src="/image/arrow_down.png" class="arrow-down"></a>
 					<div class="collapse" id="examination">
 						<a href="/teacher/preview" class="list-group-item">Xem đề thi</a>
-						<a href="/teacher/test" class="list-group-item">Thêm đề thi</a>
+
+						<a href="#group-type-test" class="list-group-item" data-toggle="collapse" data-parent="#examination">Thêm đề thi<img src="/image/arrow_down.png" class="arrow-down"></a>
+						<div class="collapse" id="group-type-test">
+							<a href="/teacher/test" class="list-group-item list-group-item-warning" data-parent="#group-type-test"><img src="/image/arrow_right.png" class="arrow-right">Thêm từng nhóm</a>
+							<a href="/teacher/test_all" class="list-group-item list-group-item-warning" data-parent="#group-type-test"><img src="/image/arrow_right.png" class="arrow-right">Thêm toàn bộ</a>
+						</div>
+
 						<a href="#" class="list-group-item">Sửa đề thi</a>
 						<a href="#" class="list-group-item">Xóa đề thi</a>
 					</div>
