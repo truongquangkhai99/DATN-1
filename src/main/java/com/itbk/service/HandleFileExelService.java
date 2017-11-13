@@ -6,9 +6,11 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashSet;
 
 /**
  * Created by PC on 11/9/2017.
@@ -21,11 +23,13 @@ public class HandleFileExelService {
 	private StudentService studentService;
 
 	@Autowired
-	private UserRoleService userRoleService;
+	private UserService userService;
 
 	@Autowired
-	@Qualifier("userService")
-	private UserService userService;
+	private RoleService roleService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	GroupService groupService;
@@ -112,10 +116,15 @@ public class HandleFileExelService {
 			}
 
 			studentService.save(student);
-			User user = new User(student.getIdB(), student.getDateOfBirth(), true);
-			userService.saveUser(user);
-			UserRole userRole = new UserRole(user, Constant.RoleType.ROLE_STUDENT);
-			userRoleService.saveUserRole(userRole);
+			if (userService.findByUserName(student.getIdB()) == null) {
+				User user = new User();
+				user.setUsername(student.getIdB());
+				user.setPassword(passwordEncoder.encode(student.getDateOfBirth()));
+				HashSet<Role> roles = new HashSet<>();
+				roles.add(roleService.findByName(Constant.RoleType.ROLE_STUDENT));
+				user.setRoles(roles);
+				userService.saveUser(user);
+			}
 		}
 	}
 
