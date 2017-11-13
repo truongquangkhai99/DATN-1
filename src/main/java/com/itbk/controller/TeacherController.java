@@ -233,6 +233,65 @@ public class TeacherController {
 		return new ModelAndView("excelPOIView", "params", params);
 	}
 
+	@RequestMapping(value = "/output_all", method = RequestMethod.GET)
+	public String outputAllGet(Model model) throws IOException {
+
+		return "/teacher/output_all";
+	}
+
+	@RequestMapping(value = "/output_all", method = RequestMethod.POST)
+	public ModelAndView outputAllPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group, HttpServletResponse response) throws IOException {
+		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
+		ArrayList<Object> params = new ArrayList<>();
+		params.add(null);
+		params.add(fileName);
+
+		return new ModelAndView("excelPOIView", "params", params);
+	}
+
+
+	@RequestMapping(value = "/output_test", method = RequestMethod.GET)
+	public String outputTestGet(Model model) throws IOException {
+		if (getUserName() != null) {
+			Teacher teacher = teacherService.findTeacherByUsername(getUserName());
+			ArrayList<String> groups = new ArrayList<>();
+			for(Group group : teacher.getGroups()) {
+				groups.add(group.getName());
+			}
+			model.addAttribute("groups", groups);
+		}
+
+		return "/teacher/output_test";
+	}
+
+	@RequestMapping(value = "/output_test", method = RequestMethod.POST)
+	public ModelAndView outputTestPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group, @RequestParam("original") String original, HttpServletResponse response) throws IOException {
+		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
+		ArrayList<Object> params = new ArrayList<>();
+		params.add(groupService.findGroupByGroupName(group).getId());
+		params.add(fileName);
+		params.add(original);
+
+		return new ModelAndView("excelPOIView", "params", params);
+	}
+
+	@RequestMapping(value = "/output_all_test", method = RequestMethod.GET)
+	public String outputAllTestGet(Model model) throws IOException {
+
+		return "/teacher/output_all_test";
+	}
+
+	@RequestMapping(value = "/output_all_test", method = RequestMethod.POST)
+	public ModelAndView outputAllTestPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group, @RequestParam("original") String original, HttpServletResponse response) throws IOException {
+		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
+		ArrayList<Object> params = new ArrayList<>();
+		params.add(null);
+		params.add(fileName);
+		params.add(original);
+
+		return new ModelAndView("excelPOIView", "params", params);
+	}
+
 	public String getUserName() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String userName = null;

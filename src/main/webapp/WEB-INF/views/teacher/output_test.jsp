@@ -19,9 +19,9 @@
 
 				<div class="col-md-8">
 					<div class="bs-example well">
-						<form class="form-create" name='createForm' action="/teacher/output" method="POST">
+						<form class="form-create" name='createForm' action="/teacher/output_test" method="POST">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-							<input type="hidden" name="original" value=""/>
+							<input type="hidden" name="original" value="original"/>
 
 							<div class="form-group">
 								<label for="sel1">Chọn nhóm thi:</label>

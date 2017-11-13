@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /**
  * Created by PC on 11/9/2017.
  */
@@ -30,5 +32,10 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public Group findGroupById(int id) {
 		return groupRepository.findOne(id);
+	}
+
+	@Override
+	public ArrayList<Group> findAllGroup() {
+		return (ArrayList<Group>)groupRepository.findAll();
 	}
 }
