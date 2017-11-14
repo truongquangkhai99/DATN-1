@@ -52,8 +52,10 @@ public class UserController {
 	public String studentPage(Model model) {
 		String userName = getUserName();
 		if(userName != null ) {
-			boolean isTested = studentService.findIsTestedByUsername(getUserName());
-			model.addAttribute("isTested", isTested);
+			Object isTested = studentService.findIsTestedByUsername(getUserName());
+			if((Object)isTested != null) {
+				model.addAttribute("isTested", (boolean)isTested);
+			}
 		}
 
 		return "/student/student";

@@ -31,5 +31,5 @@ public interface StudentService {
 
 	long findTimerByUsername(String userName);
 
-	boolean findIsTestedByUsername(String userName);
+	Object findIsTestedByUsername(String userName);
 }

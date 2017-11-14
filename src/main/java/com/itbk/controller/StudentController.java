@@ -42,7 +42,8 @@ public class StudentController {
 		// set timer when user shutting down PC that not yet finished the test
 		String userName = getUserName();
 		if(userName != null) {
-			if(!studentService.findIsTestedByUsername(getUserName())) {
+			Object isTested = studentService.findIsTestedByUsername(getUserName());
+			if(isTested != null && !(boolean)isTested) {
 				String timerStr = request.getParameter("timerLast");
 				if(timerStr != null) {
 					long timer = Long.parseLong(timerStr);

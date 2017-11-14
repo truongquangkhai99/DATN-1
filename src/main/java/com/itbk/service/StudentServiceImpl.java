@@ -74,7 +74,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public boolean findIsTestedByUsername(String userName) {
+	public Object findIsTestedByUsername(String userName) {
 		return studentRepository.findIsTestedByUsername(userName);
 	}
 }

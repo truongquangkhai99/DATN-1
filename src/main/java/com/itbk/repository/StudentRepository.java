@@ -44,7 +44,7 @@ public interface StudentRepository extends CrudRepository<Student, Integer> {
 	int updateTimer(@Param("userName") String userName, @Param("timer") long timer);
 
 	@Query(value="SELECT is_tested FROM students where idb = :userName", nativeQuery = true)
-	boolean findIsTestedByUsername(@Param("userName") String userName);
+	Object findIsTestedByUsername(@Param("userName") String userName);
 
 	@Modifying
 	@Transactional
