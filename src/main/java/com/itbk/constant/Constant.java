@@ -9,6 +9,10 @@ public final class Constant {
 		public static final String SEPARATE_ANSWER = "XXX";
 	}
 
+	public final class NoDataInsert {
+		public static final String NO_DATA_INSERT = "FFFFFF";
+	}
+
 	public final class RoleType {
 		public static final String ROLE_ADMIN = "ROLE_ADMIN";
 		public static final String ROLE_TEACHER = "ROLE_TEACHER";

@@ -62,14 +62,14 @@ public class HandleFileExelService {
 			workbook.close();
 			return true;
 		} catch (Exception e) {
-			System.out.println("loi tai day: " + e.getMessage());
+			System.out.println("Errors: " + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
 	}
 
 	public void readBySheet(Sheet sheet, Group group, boolean isExistedGroup) {
-		String string = "#####";
+		String string = Constant.NoDataInsert.NO_DATA_INSERT;
 		String nameTeacher = "";
 
 		for (Row row : sheet) {
