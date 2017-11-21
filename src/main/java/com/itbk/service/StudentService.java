@@ -34,4 +34,6 @@ public interface StudentService {
 	Object findIsTestedByUsername(String userName);
 
 	Object countAllStudent();
+
+	Object countStudentByGroupId(int idGroup);
 }

@@ -17,9 +17,9 @@
 
 					<a href="#admin-teacher" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý giảng viên<img src="/image/arrow_down.png" class="arrow-down"></a>
 					<div class="collapse" id="admin-teacher">
-						<a href="#" class="list-group-item">Thông tin giảng viên</a>
+						<a href="/admin/info_teacher" class="list-group-item">Thông tin giảng viên</a>
 						<a href="/admin/create" class="list-group-item">Thêm giảng viên</a>
-						<a href="#" class="list-group-item">Chỉnh sửa giảng viên</a>
+						<a href="#" class="list-group-item">Chỉnh sửa thông tin giảng viên</a>
 						<a href="#" class="list-group-item">Xóa giảng viên</a>
 					</div>
 					<c:if test="${pageContext.request.userPrincipal.name != null}">

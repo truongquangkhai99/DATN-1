@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+
 /**
  * Created by PC on 11/9/2017.
  */
@@ -17,4 +19,10 @@ public interface GroupRepository extends CrudRepository<Group, Integer> {
 
 	@Query(value="SELECT * FROM groups where name = :name", nativeQuery = true)
 	Group findGroupByGroupName(@Param("name") String name);
+
+	@Query(value="SELECT count(*) FROM groups where teacher_id = :id", nativeQuery = true)
+	Object countGroupByTeacherId(@Param("id") Integer id);
+
+	@Query(value="SELECT * FROM groups where teacher_id = :idTeacher", nativeQuery = true)
+	ArrayList<Group> findGroupsByTeacherId(@Param("idTeacher") int idTeacher);
 }

@@ -1,6 +1,7 @@
 package com.itbk.controller;
 
 import com.itbk.constant.Constant;
+import com.itbk.model.Group;
 import com.itbk.model.Role;
 import com.itbk.model.Teacher;
 import com.itbk.model.User;
@@ -20,10 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = {"/admin"})
@@ -160,12 +158,54 @@ public class AdminController {
 		return "login";
 	}
 
+	@RequestMapping(value = "/info_teacher", method = RequestMethod.GET)
+	public String infoTeacherGet(Model model) throws IOException {
+		if (getUserName() != null) {
+			Object objects = teacherService.findAllTeacher();
+			ArrayList<String> teachers = new ArrayList<>();
+			if(objects != null) {
+				for(Teacher teacher : (ArrayList<Teacher>)objects) {
+					teachers.add(teacher.getName());
+				}
+			}
+			model.addAttribute("teachers", teachers);
+		}
+
+		return "/admin/info_teacher";
+	}
+
+	@RequestMapping(value = "/info_teacher", method = RequestMethod.POST)
+	public String infoTeacherPost(@RequestParam("teacher") String nameTeacher, Model model) throws IOException {
+		if(nameTeacher.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			return "/admin/info_teacher";
+		}
+		Teacher teacher = teacherService.findTeacherByName(nameTeacher);
+		model.addAttribute("nameTeacher", teacher.getName());
+		try {
+			int teacherId = teacher.getId();
+			Object groups = groupService.findGroupsByTeacherId(teacherId);
+			model.addAttribute("countGroup", ((ArrayList<Group>)(groups)).size());
+			int countAllStudent = 0;
+			for(Group group : ((ArrayList<Group>)(groups))) {
+				countAllStudent += (int)studentService.countStudentByGroupId(group.getId());
+			}
+			model.addAttribute("countStudent", countAllStudent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+		model.addAttribute("success", true);
+		return "/admin/info_teacher";
+	}
+
 	public String getUserName() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String userName = null;
 		if (principal instanceof UserDetails) {
 			userName = ((UserDetails) principal).getUsername();
-			System.out.println("username = " + ((UserDetails) principal).getUsername());
 		}
 
 		return userName;

@@ -13,9 +13,13 @@ public interface GroupService {
 
 	Group findGroupByGroupName(String name);
 
-	Group findGroupById(int id);
+	Group findGroupById(Integer id);
 
 	ArrayList<Group> findAllGroup();
 
 	Object countAllGroup();
+
+	Object countGroupByTeacherId(Integer idTeacher);
+
+	Object findGroupsByTeacherId(int idTeacher);
 }

@@ -30,7 +30,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public Group findGroupById(int id) {
+	public Group findGroupById(Integer id) {
 		return groupRepository.findOne(id);
 	}
 
@@ -42,5 +42,15 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public Object countAllGroup() {
 		return groupRepository.count();
+	}
+
+	@Override
+	public Object countGroupByTeacherId(Integer idTeacher) {
+		return groupRepository.countGroupByTeacherId(idTeacher);
+	}
+
+	@Override
+	public Object findGroupsByTeacherId(int idTeacher) {
+		return groupRepository.findGroupsByTeacherId(idTeacher);
 	}
 }

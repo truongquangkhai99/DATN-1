@@ -19,6 +19,9 @@ public interface TeacherRepository extends CrudRepository<Teacher, Integer> {
 	@Query(value="SELECT * FROM teachers where account = :userName", nativeQuery = true)
 	Teacher findTeacherByUsername(@Param("userName") String userName);
 
+	@Query(value="SELECT * FROM teachers where name = :name", nativeQuery = true)
+	Teacher findTeacherByName(@Param("name") String name);
+
 	@Query(value="SELECT distinct t FROM Teacher t join fetch t.groups where t.account = :userName")
 	Teacher findGroupIdByUsername(@Param("userName") String userName);
 }

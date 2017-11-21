@@ -82,4 +82,9 @@ public class StudentServiceImpl implements StudentService {
 	public Object countAllStudent() {
 		return studentRepository.count();
 	}
+
+	@Override
+	public Object countStudentByGroupId(int idGroup) {
+		return studentRepository.countStudentByGroupId(idGroup);
+	}
 }

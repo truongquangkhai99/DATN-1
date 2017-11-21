@@ -54,4 +54,7 @@ public interface StudentRepository extends CrudRepository<Student, Integer> {
 	@Query(value="SELECT timer FROM students where idb = :userName", nativeQuery = true)
 	long findTimerByUsername(@Param("userName") String userName);
 
+	@Query(value="SELECT count(*) FROM students where group_id = :id", nativeQuery = true)
+	Object countStudentByGroupId(@Param("id") Integer id);
+
 }

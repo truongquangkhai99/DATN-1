@@ -30,8 +30,18 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
+	public Teacher findTeacherByName(String name) {
+		return teacherRepository.findTeacherByName(name);
+	}
+
+	@Override
 	public Teacher findGroupIdByUsername(String userName) {
 		return teacherRepository.findGroupIdByUsername(userName);
+	}
+
+	@Override
+	public Object findAllTeacher() {
+		return teacherRepository.findAll();
 	}
 
 	@Override
