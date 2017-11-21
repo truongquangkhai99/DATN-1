@@ -38,4 +38,9 @@ public class GroupServiceImpl implements GroupService {
 	public ArrayList<Group> findAllGroup() {
 		return (ArrayList<Group>)groupRepository.findAll();
 	}
+
+	@Override
+	public Object countAllGroup() {
+		return groupRepository.count();
+	}
 }

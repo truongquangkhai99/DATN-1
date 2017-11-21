@@ -16,4 +16,6 @@ public interface GroupService {
 	Group findGroupById(int id);
 
 	ArrayList<Group> findAllGroup();
+
+	Object countAllGroup();
 }

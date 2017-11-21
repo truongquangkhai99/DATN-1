@@ -32,4 +32,6 @@ public interface StudentService {
 	long findTimerByUsername(String userName);
 
 	Object findIsTestedByUsername(String userName);
+
+	Object countAllStudent();
 }

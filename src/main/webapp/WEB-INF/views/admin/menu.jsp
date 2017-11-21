@@ -11,9 +11,8 @@
 				<div class="list-group panel">
 					<a href="#admin-menu" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý Admin<img src="/image/arrow_down.png" class="arrow-down"></a>
 					<div class="collapse" id="admin-menu">
-						<a href="#" class="list-group-item">Thông tin chung</a>
-						<a href="#" class="list-group-item">Chỉnh sửa TT</a>
-						<a href="#" class="list-group-item">Thay đổi mật khẩu</a>
+						<a href="/admin/info" class="list-group-item">Thông tin chung</a>
+						<a href="/admin/changeinfo" class="list-group-item">Thay đổi thông tin</a>
 					</div>
 
 					<a href="#admin-teacher" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý giảng viên<img src="/image/arrow_down.png" class="arrow-down"></a>

@@ -77,4 +77,9 @@ public class StudentServiceImpl implements StudentService {
 	public Object findIsTestedByUsername(String userName) {
 		return studentRepository.findIsTestedByUsername(userName);
 	}
+
+	@Override
+	public Object countAllStudent() {
+		return studentRepository.count();
+	}
 }

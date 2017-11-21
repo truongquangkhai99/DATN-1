@@ -36,7 +36,7 @@ public class UserController {
 	public String adminPage(Model model) {
 		model.addAttribute("title", "This is Admin page");
 
-		return "/admin/admin";
+		return "redirect:/admin/info";
 	}
 
 	// Controller for teacher

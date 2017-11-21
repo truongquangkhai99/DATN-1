@@ -12,4 +12,6 @@ public interface TeacherService {
 	Teacher findTeacherByUsername(String userName);
 
 	Teacher findGroupIdByUsername(String userName);
+
+	Object countAllTeacher();
 }

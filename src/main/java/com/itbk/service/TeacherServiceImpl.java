@@ -33,4 +33,9 @@ public class TeacherServiceImpl implements TeacherService {
 	public Teacher findGroupIdByUsername(String userName) {
 		return teacherRepository.findGroupIdByUsername(userName);
 	}
+
+	@Override
+	public Object countAllTeacher() {
+		return teacherRepository.count();
+	}
 }

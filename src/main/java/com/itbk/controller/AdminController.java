@@ -4,10 +4,14 @@ import com.itbk.constant.Constant;
 import com.itbk.model.Role;
 import com.itbk.model.Teacher;
 import com.itbk.model.User;
-import com.itbk.service.RoleService;
-import com.itbk.service.TeacherService;
-import com.itbk.service.UserService;
+import com.itbk.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = {"/admin"})
@@ -34,6 +41,12 @@ public class AdminController {
 	@Autowired
 	private TeacherService teacherService;
 
+	@Autowired
+	private GroupService groupService;
+
+	@Autowired
+	private StudentService studentService;
+
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String listUploadedFiles(Model model) throws IOException {
 		return "/admin/create";
@@ -42,19 +55,119 @@ public class AdminController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String createGroup(@RequestParam("name") String name, @RequestParam("account") String account,
 							  @RequestParam("password") String password, Model model) {
-		Teacher teacher = new Teacher(name, account, password);
-		teacherService.saveTeacher(teacher);
-		if (userService.findByUserName("account") == null) {
-			User user = new User();
-			user.setUsername(account);
-			user.setPassword(passwordEncoder.encode(password));
-			HashSet<Role> roles = new HashSet<>();
-			roles.add(roleService.findByName(Constant.RoleType.ROLE_TEACHER));
-			user.setRoles(roles);
-			userService.saveUser(user);
+		if (userService.findByUserName(account) == null) {
+			if(account.equals("") || name.equals("") || password.equals("")) {
+				model.addAttribute("success", false);
+				model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+				return "/admin/create";
+			} else if(!account.matches(Constant.Pattern.PATTERN_USERNAME)) {
+				model.addAttribute("success", false);
+				model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FORMAT_USERNAME);
+				return "/admin/create";
+			} else {
+				Teacher teacher = new Teacher(name, account, password);
+				teacherService.saveTeacher(teacher);
+				User user = new User();
+				user.setUsername(account);
+				user.setPassword(passwordEncoder.encode(password));
+				HashSet<Role> roles = new HashSet<>();
+				roles.add(roleService.findByName(Constant.RoleType.ROLE_TEACHER));
+				user.setRoles(roles);
+				userService.saveUser(user);
+
+				model.addAttribute("success", true);
+				return "/admin/create";
+			}
+		} else {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EXISTED_USERNAME);
+			model.addAttribute("success", false);
+			return "/admin/create";
+		}
+	}
+
+	@RequestMapping(value = "/info", method = RequestMethod.GET)
+	public String getInfo(Model model) throws IOException {
+		String userName = getUserName();
+		if(userName != null) {
+			model.addAttribute("username", userName);
+		}
+		Object countAllTeacher = teacherService.countAllTeacher();
+		Object countAllGroup = groupService.countAllGroup();
+		Object countAllStudent = studentService.countAllStudent();
+
+		if(countAllGroup != null && countAllStudent != null && countAllTeacher != null) {
+			model.addAttribute("countGroup", (long)countAllGroup);
+			model.addAttribute("countTeacher", (long)countAllTeacher);
+			model.addAttribute("countStudent", (long)countAllStudent);
 		}
 
-		model.addAttribute("success", true);
-		return "/admin/create";
+		return "/admin/info";
+	}
+
+	@RequestMapping(value = "/changeinfo", method = RequestMethod.GET)
+	public String getChangeInfo() {
+
+		return "/admin/changeinfo";
+	}
+
+	@RequestMapping(value = "/changeinfo", method = RequestMethod.POST)
+	public String postChangeInfo(@RequestParam("account") String account, @RequestParam("oldpass") String oldPass,
+				@RequestParam("newpass") String newPass, @RequestParam("renewpass") String reNewPass, Model model) {
+		User admin = userService.findByUserName(getUserName());
+		if(account.equals("") || oldPass.equals("") || newPass.equals("") || reNewPass.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			return "/admin/changeinfo";
+		}
+		else if(!account.matches(Constant.Pattern.PATTERN_USERNAME)) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FORMAT_USERNAME);
+			return "/admin/changeinfo";
+		}
+		else if(!passwordEncoder.matches(oldPass, admin.getPassword())) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_PASS_INCORRECT);
+			return "/admin/changeinfo";
+		}
+		else if(!newPass.matches(Constant.Pattern.PATTERN_PASS)) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FORMAT_PASS);
+			return "/admin/changeinfo";
+		}
+		else if(!reNewPass.equals(newPass)) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_RE_PASS_INCORRECT);
+			return "/admin/changeinfo";
+		} else {
+			admin.setUsername(account);
+			admin.setPassword(passwordEncoder.encode(newPass));
+
+			Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+			Set<Role> roles = admin.getRoles();
+			for (Role role : roles) {
+				grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+			}
+
+			org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(admin.getUsername(), admin.getPassword(), grantedAuthorities);
+			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+
+			userService.saveUser(admin);
+
+			model.addAttribute("success", true);
+		}
+
+		return "login";
+	}
+
+	public String getUserName() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String userName = null;
+		if (principal instanceof UserDetails) {
+			userName = ((UserDetails) principal).getUsername();
+			System.out.println("username = " + ((UserDetails) principal).getUsername());
+		}
+
+		return userName;
 	}
 }
