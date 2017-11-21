@@ -20,7 +20,7 @@
 						<a href="/admin/info_teacher" class="list-group-item">Thông tin giảng viên</a>
 						<a href="/admin/create" class="list-group-item">Thêm giảng viên</a>
 						<a href="/admin/edit_pass_teacher" class="list-group-item">Cấp lại mật khẩu giảng viên</a>
-						<a href="#" class="list-group-item">Xóa giảng viên</a>
+						<a href="/admin/delete_teacher" class="list-group-item">Xóa giảng viên</a>
 					</div>
 					<c:if test="${pageContext.request.userPrincipal.name != null}">
 						<a href="javascript:formSubmit()" class="list-group-item list-group-item-success" data-parent="#MainMenu">Thoát</a>

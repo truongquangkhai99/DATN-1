@@ -236,6 +236,34 @@ public class AdminController {
 		return "/admin/edit_pass_teacher";
 	}
 
+	@RequestMapping(value = "/delete_teacher", method = RequestMethod.GET)
+	public String deleteTeacherGet(Model model) throws IOException {
+		if (getUserName() != null) {
+			Object objects = teacherService.findAllTeacher();
+			ArrayList<String> teachers = new ArrayList<>();
+			if(objects != null) {
+				for(Teacher teacher : (ArrayList<Teacher>)objects) {
+					teachers.add(teacher.getName());
+				}
+			}
+			model.addAttribute("teachers", teachers);
+		}
+
+		return "/admin/delete_teacher";
+	}
+
+	@RequestMapping(value = "/delete_teacher", method = RequestMethod.POST)
+	public String deleteTeacherPost(@RequestParam("teacher") String nameTeacher, Model model) throws IOException {
+		if(nameTeacher.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			return "/admin/edit_pass_teacher";
+		}
+		Teacher teacher = teacherService.findTeacherByName(nameTeacher);
+
+		return "/admin/delete_teacher";
+	}
+
 	public String getUserName() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String userName = null;

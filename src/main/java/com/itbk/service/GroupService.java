@@ -22,4 +22,6 @@ public interface GroupService {
 	Object countGroupByTeacherId(Integer idTeacher);
 
 	Object findGroupsByTeacherId(int idTeacher);
+
+	void deleteGroupById(int id);
 }

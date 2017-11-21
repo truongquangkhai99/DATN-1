@@ -7,4 +7,6 @@ import com.itbk.model.Answer;
  */
 public interface AnswerService {
 	Answer saveAnswer(Answer answer);
+
+	void deleteAnswerById(int id);
 }

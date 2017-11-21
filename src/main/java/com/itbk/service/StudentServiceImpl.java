@@ -87,4 +87,9 @@ public class StudentServiceImpl implements StudentService {
 	public Object countStudentByGroupId(int idGroup) {
 		return studentRepository.countStudentByGroupId(idGroup);
 	}
+
+	@Override
+	public void deleteStudentById(int id) {
+		studentRepository.delete(id);
+	}
 }

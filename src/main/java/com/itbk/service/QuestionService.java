@@ -14,4 +14,6 @@ public interface QuestionService {
 	Question findLastest();
 
 	List<Question> getExaminationByGroupId(int groupId);
+
+	void deleteQuestionById(int id);
 }

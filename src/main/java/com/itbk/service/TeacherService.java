@@ -20,4 +20,6 @@ public interface TeacherService {
 	Object findAllTeacher();
 
 	Object countAllTeacher();
+
+	void deleteTeacherById(int id);
 }

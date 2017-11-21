@@ -31,4 +31,9 @@ public class QuestionServiceImpl implements QuestionService {
 	public List<Question> getExaminationByGroupId(int groupId) {
 		return questionRepository.getExaminationByGroupId(groupId);
 	}
+
+	@Override
+	public void deleteQuestionById(int id) {
+		questionRepository.delete(id);
+	}
 }

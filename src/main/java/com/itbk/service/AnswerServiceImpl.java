@@ -20,4 +20,9 @@ public class AnswerServiceImpl implements AnswerService {
 	public Answer saveAnswer(Answer answer) {
 		return answerRepository.save(answer);
 	}
+
+	@Override
+	public void deleteAnswerById(int id) {
+		answerRepository.delete(id);
+	}
 }

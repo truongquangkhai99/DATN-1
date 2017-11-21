@@ -53,4 +53,9 @@ public class GroupServiceImpl implements GroupService {
 	public Object findGroupsByTeacherId(int idTeacher) {
 		return groupRepository.findGroupsByTeacherId(idTeacher);
 	}
+
+	@Override
+	public void deleteGroupById(int id) {
+		groupRepository.delete(id);
+	}
 }
