@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-
 /**
  * Created by PC on 10/26/2017.
  */
@@ -22,6 +20,11 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public Teacher saveTeacher(Teacher teacher) {
 		return teacherRepository.save(teacher);
+	}
+
+	@Override
+	public int updatePassword(String password, String username) {
+		return teacherRepository.updatePassword(password, username);
 	}
 
 	@Override

@@ -63,7 +63,7 @@ public class AdminController {
 				model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FORMAT_USERNAME);
 				return "/admin/create";
 			} else {
-				Teacher teacher = new Teacher(name, account, password);
+				Teacher teacher = new Teacher(name, account, passwordEncoder.encode(password));
 				teacherService.saveTeacher(teacher);
 				User user = new User();
 				user.setUsername(account);
@@ -199,6 +199,41 @@ public class AdminController {
 
 		model.addAttribute("success", true);
 		return "/admin/info_teacher";
+	}
+
+	@RequestMapping(value = "/edit_pass_teacher", method = RequestMethod.GET)
+	public String editPasswordTeacherGet(Model model) throws IOException {
+		if (getUserName() != null) {
+			Object objects = teacherService.findAllTeacher();
+			ArrayList<String> teachers = new ArrayList<>();
+			if(objects != null) {
+				for(Teacher teacher : (ArrayList<Teacher>)objects) {
+					teachers.add(teacher.getName());
+				}
+			}
+			model.addAttribute("teachers", teachers);
+		}
+
+		return "/admin/edit_pass_teacher";
+	}
+
+	@RequestMapping(value = "/edit_pass_teacher", method = RequestMethod.POST)
+	public String editPasswordTeacherPost(@RequestParam("teacher") String nameTeacher, @RequestParam("password") String password, Model model) throws IOException {
+		if(nameTeacher.equals("") || password.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			return "/admin/edit_pass_teacher";
+		} else if(!password.matches(Constant.Pattern.PATTERN_PASS)) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FORMAT_PASS);
+			return "/admin/edit_pass_teacher";
+		}
+		Teacher teacher = teacherService.findTeacherByName(nameTeacher);
+		userService.updatePassword(passwordEncoder.encode(password), userService.findByUserName(teacher.getAccount()).getId());
+		teacherService.updatePassword(passwordEncoder.encode(password), teacher.getAccount());
+
+		model.addAttribute("success", true);
+		return "/admin/edit_pass_teacher";
 	}
 
 	public String getUserName() {

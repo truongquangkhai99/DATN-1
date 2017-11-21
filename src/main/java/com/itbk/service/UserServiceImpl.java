@@ -24,12 +24,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Object updateUsername(String username, int id) {
+	public int updateUsername(String username, int id) {
 		return userRepository.updateUsername(username, id);
 	}
 
 	@Override
-	public Object updatePassword(String password, int id) {
+	public int updatePassword(String password, int id) {
 		return userRepository.updatePassword(password, id);
 	}
 

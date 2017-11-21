@@ -19,7 +19,7 @@
 
 				<div class="col-md-8">
 					<div class="bs-example well">
-						<form class="form-create" name='createForm' action="/admin/info_teacher" method="POST">
+						<form class="form-create" name='createForm' action="/admin/edit_pass_teacher" method="POST">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 							<label for="sel1">Chọn giảng viên:</label>
 							<select class="form-control" id="sel1" name="teacher">
@@ -28,30 +28,19 @@
 								</c:forEach>
 							</select>
 
-							<c:if test="${success != null && success}">
-								<table class="table" style="margin-top: 5px">
-									<tbody>
-										<tr>
-											<th scope="row">Tên giảng viên:</th>
-											<td><c:out value="${nameTeacher}"/></td>
-										</tr>
-										<tr>
-											<th scope="row">Số lượng nhóm thi:</th>
-											<td><c:out value="${countGroup}"/></td>
-										</tr>
-										<tr>
-											<th scope="row">Số lượng sinh viên:</th>
-											<td><c:out value="${countStudent}"/></td>
-										</tr>
-									</tbody>
-								</table>
-							</c:if>
+							<div class="form-group">
+								<label for="inputPassword">Mật khẩu mới:</label>
+								<input type="input" class="form-control" id="inputPassword" name="password" placeholder="Mật khẩu mới">
+							</div>
 
 							<div style="margin-top: 5px">
-								<button type="submit" class="btn btn-primary">Xem</button>
+								<button type="submit" class="btn btn-primary">Tạo</button>
 								<button type="submit" class="btn btn-primary" style="float: right"><a id="bt-login" href="/admin">Hủy</a></button>
 							</div>
 
+							<c:if test="${success != null && success}">
+								<div style="color: blue">Cấp lại mật khẩu giảng viên thành công</div>
+							</c:if>
 							<c:if test="${success != null && !success}">
 								<div style="color: red"><c:out value="${error_message}"/></div>
 							</c:if>

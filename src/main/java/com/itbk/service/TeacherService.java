@@ -9,6 +9,8 @@ public interface TeacherService {
 
 	Teacher saveTeacher(Teacher teacher);
 
+	int updatePassword(String password, String username);
+
 	Teacher findTeacherByUsername(String userName);
 
 	Teacher findTeacherByName(String name);

@@ -8,7 +8,7 @@ public interface UserService {
 
 	User saveUser(User user);
 
-	Object updateUsername(String username, int id);
+	int updateUsername(String username, int id);
 
-	Object updatePassword(String password, int id);
+	int updatePassword(String password, int id);
 }
