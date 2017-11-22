@@ -12,5 +12,7 @@ public interface UserService {
 
 	int updatePassword(String password, int id);
 
+	int updateEnabled(boolean enabled, int id);
+
 	void deleteUserById(int id);
 }

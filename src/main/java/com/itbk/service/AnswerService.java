@@ -9,4 +9,6 @@ public interface AnswerService {
 	Answer saveAnswer(Answer answer);
 
 	void deleteAnswerById(int id);
+
+	void deleteAllAnswerByQuestionId(int questionID);
 }

@@ -30,6 +30,9 @@ public class User implements Serializable {
 	@Column(name = "password", nullable = false)
 	private String password;
 
+	@Column(name = "enabled", nullable = false)
+	private boolean enabled;
+
 	@ManyToMany
 	@JoinTable(
 		name = "user_role",
@@ -38,11 +41,14 @@ public class User implements Serializable {
 	)
 	private Set<Role> roles;
 
-	public User() {}
+	public User() {
+		this.enabled = true;
+	}
 
 	public User(String username, String password) {
 		this.username = username;
 		this.password = password;
+		this.enabled = true;
 	}
 
 	public int getId() {
@@ -77,4 +83,11 @@ public class User implements Serializable {
 		this.roles = roles;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 }

@@ -57,4 +57,9 @@ public interface StudentRepository extends CrudRepository<Student, Integer> {
 	@Query(value="SELECT count(*) FROM students where group_id = :id", nativeQuery = true)
 	Object countStudentByGroupId(@Param("id") Integer id);
 
+	@Modifying
+	@Transactional
+	@Query(value="DELETE FROM students WHERE group_id = :groupid", nativeQuery = true)
+	void deleteAllStudentByGroupId(@Param("groupid") int groupId);
+
 }

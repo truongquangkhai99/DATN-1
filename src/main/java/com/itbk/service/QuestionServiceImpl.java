@@ -33,7 +33,17 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
+	public List<Question> findAllQuestionByGroupId(int groupId) {
+		return questionRepository.findAllQuestionByGroupId(groupId);
+	}
+
+	@Override
 	public void deleteQuestionById(int id) {
 		questionRepository.delete(id);
+	}
+
+	@Override
+	public void deleteAllQuestionByGroupId(int groupId) {
+		questionRepository.deleteAllQuestionByGroupId(groupId);
 	}
 }

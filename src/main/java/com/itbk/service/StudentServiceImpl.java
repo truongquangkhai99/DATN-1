@@ -92,4 +92,9 @@ public class StudentServiceImpl implements StudentService {
 	public void deleteStudentById(int id) {
 		studentRepository.delete(id);
 	}
+
+	@Override
+	public void deleteAllStudentByGroupId(int groupId) {
+		studentRepository.deleteAllStudentByGroupId(groupId);
+	}
 }

@@ -1,10 +1,7 @@
 package com.itbk.controller;
 
 import com.itbk.constant.Constant;
-import com.itbk.model.Group;
-import com.itbk.model.Role;
-import com.itbk.model.Teacher;
-import com.itbk.model.User;
+import com.itbk.model.*;
 import com.itbk.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,6 +41,12 @@ public class AdminController {
 
 	@Autowired
 	private StudentService studentService;
+
+	@Autowired
+	QuestionService questionService;
+
+	@Autowired
+	AnswerService answerService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String listUploadedFiles(Model model) throws IOException {
@@ -175,7 +178,12 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/info_teacher", method = RequestMethod.POST)
-	public String infoTeacherPost(@RequestParam("teacher") String nameTeacher, Model model) throws IOException {
+	public String infoTeacherPost(@RequestParam(value = "teacher", required = false) String nameTeacher, Model model) throws IOException {
+		if(nameTeacher == null) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/admin/info_teacher";
+		}
 		if(nameTeacher.equals("")) {
 			model.addAttribute("success", false);
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
@@ -196,6 +204,14 @@ public class AdminController {
 			e.printStackTrace();
 		}
 
+		Object objects = teacherService.findAllTeacher();
+		ArrayList<String> teachers = new ArrayList<>();
+		if(objects != null) {
+			for(Teacher teacher1 : (ArrayList<Teacher>)objects) {
+				teachers.add(teacher1.getName());
+			}
+		}
+		model.addAttribute("teachers", teachers);
 
 		model.addAttribute("success", true);
 		return "/admin/info_teacher";
@@ -218,8 +234,12 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/edit_pass_teacher", method = RequestMethod.POST)
-	public String editPasswordTeacherPost(@RequestParam("teacher") String nameTeacher, @RequestParam("password") String password, Model model) throws IOException {
-		if(nameTeacher.equals("") || password.equals("")) {
+	public String editPasswordTeacherPost(@RequestParam(value = "teacher", required = false) String nameTeacher, @RequestParam("password") String password, Model model) throws IOException {
+		if(nameTeacher == null) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/admin/edit_pass_teacher";
+		}else if(nameTeacher.equals("") || password.equals("")) {
 			model.addAttribute("success", false);
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
 			return "/admin/edit_pass_teacher";
@@ -232,12 +252,21 @@ public class AdminController {
 		userService.updatePassword(passwordEncoder.encode(password), userService.findByUserName(teacher.getAccount()).getId());
 		teacherService.updatePassword(passwordEncoder.encode(password), teacher.getAccount());
 
+		Object objects = teacherService.findAllTeacher();
+		ArrayList<String> teachers = new ArrayList<>();
+		if(objects != null) {
+			for(Teacher teacher1 : (ArrayList<Teacher>)objects) {
+				teachers.add(teacher1.getName());
+			}
+		}
+		model.addAttribute("teachers", teachers);
+
 		model.addAttribute("success", true);
 		return "/admin/edit_pass_teacher";
 	}
 
-	@RequestMapping(value = "/delete_teacher", method = RequestMethod.GET)
-	public String deleteTeacherGet(Model model) throws IOException {
+	@RequestMapping(value = "/delete_logic", method = RequestMethod.GET)
+	public String deletelogicTeacherGet(Model model) throws IOException {
 		if (getUserName() != null) {
 			Object objects = teacherService.findAllTeacher();
 			ArrayList<String> teachers = new ArrayList<>();
@@ -249,19 +278,75 @@ public class AdminController {
 			model.addAttribute("teachers", teachers);
 		}
 
-		return "/admin/delete_teacher";
+		return "/admin/delete_logic";
 	}
 
-	@RequestMapping(value = "/delete_teacher", method = RequestMethod.POST)
-	public String deleteTeacherPost(@RequestParam("teacher") String nameTeacher, Model model) throws IOException {
-		if(nameTeacher.equals("")) {
+	@RequestMapping(value = "/delete_logic", method = RequestMethod.POST)
+	public String deletelogicTeacherPost(@RequestParam(value = "teacher", required = false) String nameTeacher, Model model) throws IOException {
+		if(nameTeacher == null) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/admin/delete_logic";
+		}else if(nameTeacher.equals("")) {
 			model.addAttribute("success", false);
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
-			return "/admin/edit_pass_teacher";
+			return "/admin/delete_logic";
+		}
+		userService.updateEnabled(false, userService.findByUserName(teacherService.findTeacherByName(nameTeacher).getAccount()).getId());
+
+		model.addAttribute("success", true);
+		return "/admin/delete_logic";
+	}
+
+	@RequestMapping(value = "/delete_physic", method = RequestMethod.GET)
+	public String deletePhysicTeacherGet(Model model) throws IOException {
+		if (getUserName() != null) {
+			Object objects = teacherService.findAllTeacher();
+			ArrayList<String> teachers = new ArrayList<>();
+			if(objects != null) {
+				for(Teacher teacher : (ArrayList<Teacher>)objects) {
+					teachers.add(teacher.getName());
+				}
+			}
+			model.addAttribute("teachers", teachers);
+		}
+
+		return "/admin/delete_physic";
+	}
+
+	@RequestMapping(value = "/delete_physic", method = RequestMethod.POST)
+	public String deletePhysicTeacherPost(@RequestParam(value = "teacher", required = false) String nameTeacher, Model model) throws IOException {
+		if(nameTeacher == null) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/admin/delete_physic";
+		}else if(nameTeacher.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			return "/admin/delete_physic";
 		}
 		Teacher teacher = teacherService.findTeacherByName(nameTeacher);
+		ArrayList<Group> groups = (ArrayList<Group>)groupService.findGroupsByTeacherId(teacher.getId());
+		for(Group group : groups) {
+			ArrayList<Question> questions = (ArrayList<Question>)questionService.findAllQuestionByGroupId(group.getId());
+			questionService.deleteAllQuestionByGroupId(group.getId());
+			for(Question question : questions) {
+				answerService.deleteAllAnswerByQuestionId(question.getId());
+				questionService.deleteQuestionById(question.getId());
+			}
 
-		return "/admin/delete_teacher";
+			ArrayList<Student> students = studentService.findAllByGroupId(group.getId());
+			for(Student student : students) {
+				userService.deleteUserById(userService.findByUserName(student.getIdB()).getId());
+			}
+			studentService.deleteAllStudentByGroupId(group.getId());
+		}
+		groupService.deleteAllGroupByTeacherId(teacher.getId());
+		teacherService.deleteTeacherById(teacher.getId());
+		userService.deleteUserById(userService.findByUserName(teacher.getAccount()).getId());
+
+		model.addAttribute("success", true);
+		return "/admin/delete_physic";
 	}
 
 	public String getUserName() {

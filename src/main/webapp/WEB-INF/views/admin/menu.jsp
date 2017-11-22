@@ -20,7 +20,11 @@
 						<a href="/admin/info_teacher" class="list-group-item">Thông tin giảng viên</a>
 						<a href="/admin/create" class="list-group-item">Thêm giảng viên</a>
 						<a href="/admin/edit_pass_teacher" class="list-group-item">Cấp lại mật khẩu giảng viên</a>
-						<a href="/admin/delete_teacher" class="list-group-item">Xóa giảng viên</a>
+						<a href="#group-type" class="list-group-item" data-toggle="collapse" data-parent="#admin-menu">Xóa giảng viên<img src="/image/arrow_down.png" class="arrow-down"></a>
+						<div class="collapse" id="group-type">
+							<a href="/admin/delete_logic" class="list-group-item list-group-item-warning" data-parent="#group-type"><img src="/image/arrow_right.png" class="arrow-right">Xóa logic</a>
+							<a href="/admin/delete_physic" class="list-group-item list-group-item-warning" data-parent="#group-type"><img src="/image/arrow_right.png" class="arrow-right">Xóa vật lý</a>
+						</div>
 					</div>
 					<c:if test="${pageContext.request.userPrincipal.name != null}">
 						<a href="javascript:formSubmit()" class="list-group-item list-group-item-success" data-parent="#MainMenu">Thoát</a>

@@ -15,5 +15,9 @@ public interface QuestionService {
 
 	List<Question> getExaminationByGroupId(int groupId);
 
+	List<Question> findAllQuestionByGroupId(int groupId);
+
 	void deleteQuestionById(int id);
+
+	void deleteAllQuestionByGroupId(int groupId);
 }

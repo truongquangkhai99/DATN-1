@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class UserController {
 
-	private static boolean isStartApp = true;
-
 	@Autowired
 	StudentService studentService;
 
@@ -34,16 +32,12 @@ public class UserController {
 	// Controller for Admin
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	public String adminPage(Model model) {
-		model.addAttribute("title", "This is Admin page");
-
 		return "redirect:/admin/info";
 	}
 
 	// Controller for teacher
 	@RequestMapping(value = "/teacher", method = RequestMethod.GET)
 	public String teacherPage(Model model) {
-		model.addAttribute("title", "This is Teacher page");
-
 		return "/teacher/teacher";
 	}
 

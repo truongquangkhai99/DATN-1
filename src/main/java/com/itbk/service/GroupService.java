@@ -24,4 +24,6 @@ public interface GroupService {
 	Object findGroupsByTeacherId(int idTeacher);
 
 	void deleteGroupById(int id);
+
+	void deleteAllGroupByTeacherId(int teacherId);
 }

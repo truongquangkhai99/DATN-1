@@ -32,5 +32,6 @@ public final class Constant {
 		public static final String ERROR_RE_PASS_INCORRECT = "Mật khẩu bạn nhập lại không khớp với mật khẩu trước đó";
 		public static final String ERROR_EMPTY_INPUT = "Bạn chưa nhập dữ liệu";
 		public static final String ERROR_EXISTED_USERNAME = "Tên tài khoản đã tồn tại";
+		public static final String ERROR_NO_DATA = "Chưa có dữ liệu";
 	}
 }

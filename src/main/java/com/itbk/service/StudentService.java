@@ -38,4 +38,6 @@ public interface StudentService {
 	Object countStudentByGroupId(int idGroup);
 
 	void deleteStudentById(int id);
+
+	void deleteAllStudentByGroupId(int groupId);
 }

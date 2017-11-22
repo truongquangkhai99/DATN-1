@@ -19,7 +19,7 @@
 
 				<div class="col-md-8">
 					<div class="bs-example well">
-						<form class="form-create" name='createForm' action="/admin/delete_teacher" method="POST">
+						<form class="form-create" name='createForm' action="/admin/delete_logic" method="POST">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 							<label for="sel1">Chọn giảng viên:</label>
 							<select class="form-control" id="sel1" name="teacher">
@@ -34,7 +34,7 @@
 							</div>
 
 							<c:if test="${success != null && success}">
-								<div style="color: blue">Xóa giảng viên thành công</div>
+								<div style="color: blue">Xóa logic giảng viên thành công</div>
 							</c:if>
 							<c:if test="${success != null && !success}">
 								<div style="color: red"><c:out value="${error_message}"/></div>
