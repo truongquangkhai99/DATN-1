@@ -25,7 +25,7 @@
 						</div>
 
 						<a href="/teacher/change_group" class="list-group-item" >Thay đổi tên nhóm sinh viên</a>
-						<a href="#" class="list-group-item">Xóa nhóm sinh viên</a>
+						<a href="/teacher/delete_group" class="list-group-item">Xóa nhóm sinh viên</a>
 					</div>
 
 					<a href="#examination" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý đề thi<img src="/image/arrow_down.png" class="arrow-down"></a>

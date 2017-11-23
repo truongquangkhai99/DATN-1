@@ -475,6 +475,49 @@ public class TeacherController {
 		return "/teacher/change_group";
 	}
 
+	@RequestMapping(value = "/delete_group", method = RequestMethod.GET)
+	public String deleteGroupGet(Model model) throws IOException {
+		if (getUserName() != null) {
+			Object objects = groupService.findGroupsByTeacherId(teacherService.findTeacherByUsername(getUserName()).getId());
+			ArrayList<String> groups = new ArrayList<>();
+			if(objects != null) {
+				for(Group group : (ArrayList<Group>)objects) {
+					groups.add(group.getName());
+				}
+			}
+			model.addAttribute("groups", groups);
+		}
+
+		return "/teacher/delete_group";
+	}
+
+	@RequestMapping(value = "/delete_group", method = RequestMethod.POST)
+	public String deleteGroupPost(@RequestParam(value = "group", required = false) String nameGroup, Model model) throws IOException {
+		if(nameGroup == null) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/teacher/delete_group";
+		}
+		Group group = groupService.findGroupByGroupName(nameGroup);
+		ArrayList<Question> questions = (ArrayList<Question>)questionService.findAllQuestionByGroupId(group.getId());
+		questionService.deleteAllQuestionByGroupId(group.getId());
+		for(Question question : questions) {
+			answerService.deleteAllAnswerByQuestionId(question.getId());
+			questionService.deleteQuestionById(question.getId());
+		}
+
+		ArrayList<Student> students = studentService.findAllByGroupId(group.getId());
+		for(Student student : students) {
+			userService.deleteUserById(userService.findByUserName(student.getIdB()).getId());
+		}
+		studentService.deleteAllStudentByGroupId(group.getId());
+		groupService.deleteGroupById(group.getId());
+
+		model.addAttribute("success", true);
+		return "/teacher/delete_group";
+	}
+
+
 	public String getUserName() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String userName = null;
