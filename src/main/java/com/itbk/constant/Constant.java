@@ -31,7 +31,13 @@ public final class Constant {
 		public static final String ERROR_PASS_INCORRECT = "Mật khẩu bạn nhập không đúng";
 		public static final String ERROR_RE_PASS_INCORRECT = "Mật khẩu bạn nhập lại không khớp với mật khẩu trước đó";
 		public static final String ERROR_EMPTY_INPUT = "Bạn chưa nhập đầy đủ dữ liệu";
-		public static final String ERROR_EXISTED_USERNAME = "Tên tài khoản đã tồn tại";
+		public static final String ERROR_EXISTED_USERNAME = "Tên tài khoản bạn nhập đã tồn tại";
 		public static final String ERROR_NO_DATA = "Chưa có dữ liệu";
+		public static final String ERROR_FILE_IS_NOT_EXIST = "Bạn chưa chọn file";
+		public static final String ERROR_WHILE_READ_FILE = "Lỗi khi đọc file, có thể file có vấn đề (trùng lặp dữ liệu, không đúng định dạng...)";
+		public static final String ERROR_NOT_EXAM = "Nhóm bạn chọn hiện chưa có đề thi";
+		public static final String ERROR_NOT_NUMBER = "Dữ liệu bạn nhập không đúng định dạng (định dạng đúng phải là một số tự nhiên)";
+		public static final String ERROR_NO_GROUP = "Không có nhóm nào để thêm đề thi";
+		public static final String ERROR_NO_GROUP_FOR_OUTPUT = "Không có nhóm nào để xuất file";
 	}
 }

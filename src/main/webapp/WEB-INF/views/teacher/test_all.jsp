@@ -41,7 +41,7 @@
 								<div style="color: blue">Thêm đề thi thành công</div>
 							</c:if>
 							<c:if test="${success != null && !success}">
-								<div style="color: red">Thêm đề thi không thành công</div>
+								<div style="color: red"><c:out value="${error_message}"/></div>
 							</c:if>
 						</form>
 					</div>

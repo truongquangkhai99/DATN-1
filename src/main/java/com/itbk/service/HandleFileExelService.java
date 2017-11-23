@@ -51,11 +51,9 @@ public class HandleFileExelService {
 					sheet = workbook.getSheetAt(i);
 					Group groupNew = new Group();
 					groupNew.setTeacher(teacher);
-					if(i < numberOfSheet - 1) {
-						groupNew.setName("N" + sheet.getSheetName());
-						groupService.saveGroup(groupNew);
-						readBySheet(sheet, groupNew, isExistedGroup);
-					}
+					groupNew.setName("N" + sheet.getSheetName());
+					groupService.saveGroup(groupNew);
+					readBySheet(sheet, groupNew, isExistedGroup);
 				}
 			}
 

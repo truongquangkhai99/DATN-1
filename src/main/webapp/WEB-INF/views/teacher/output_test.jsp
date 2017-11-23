@@ -46,7 +46,7 @@
 								<div style="color: blue">Xuất file thành công</div>
 							</c:if>
 							<c:if test="${success != null && !success}">
-								<div style="color: red">Xuất file không thành công</div>
+								<div style="color: red"><c:out value="${error_message}"/></div>
 							</c:if>
 						</form>
 					</div>

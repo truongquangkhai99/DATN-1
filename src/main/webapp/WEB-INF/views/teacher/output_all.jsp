@@ -21,8 +21,6 @@
 					<div class="bs-example well">
 						<form class="form-create" name='createForm' action="/teacher/output_all" method="POST">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-							<input type="hidden" name="group"/>
-							<input type="hidden" name="original" value=""/>
 
 							<div class="form-group">
 								<label for="namefile">Tên file cần xuất:</label>
@@ -38,7 +36,7 @@
 								<div style="color: blue">Xuất file thành công</div>
 							</c:if>
 							<c:if test="${success != null && !success}">
-								<div style="color: red">Xuất file không thành công</div>
+								<div style="color: red"><c:out value="${error_message}"/></div>
 							</c:if>
 						</form>
 					</div>

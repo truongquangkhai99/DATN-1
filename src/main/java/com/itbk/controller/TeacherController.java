@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -139,24 +140,29 @@ public class TeacherController {
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String createGroupPost(@RequestParam("file") MultipartFile file, @RequestParam("group") String group, Model model) {
-		if (!file.isEmpty()) {
-			boolean resultReadFileExel = false;
-			Teacher teacher = teacherService.findTeacherByUsername(getUserName());
-			if(group != null) {
-				Group groupObj = new Group(group);
-				groupObj.setTeacher(teacher);
-				groupService.saveGroup(groupObj);
-				resultReadFileExel = handleFileExelService.readFileExel(file, teacher, groupObj, true);
-			}
-			if(resultReadFileExel) {
-				model.addAttribute("success", true);
-				return "/teacher/create";
+		if(file.isEmpty()) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FILE_IS_NOT_EXIST);
+			return "/teacher/create";
+		} else if(group.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			return "/teacher/create";
+		}
+		boolean resultReadFileExel = false;
+		Teacher teacher = teacherService.findTeacherByUsername(getUserName());
+		if(group != null) {
+			Group groupObj = new Group(group);
+			groupObj.setTeacher(teacher);
+			groupService.saveGroup(groupObj);
+			resultReadFileExel = handleFileExelService.readFileExel(file, teacher, groupObj, true);
+		}
+		if(resultReadFileExel) {
+			model.addAttribute("success", true);
+			return "/teacher/create";
 
-			} else {
-				model.addAttribute("success", false);
-				return "/teacher/create";
-			}
 		} else {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_WHILE_READ_FILE);
 			model.addAttribute("success", false);
 			return "/teacher/create";
 		}
@@ -172,20 +178,21 @@ public class TeacherController {
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/create_all", method = RequestMethod.POST)
 	public String createAllGroupPost(@RequestParam("file") MultipartFile file, @RequestParam("group") String group, Model model) {
-		if (!file.isEmpty()) {
-			boolean resultReadFileExel = false;
-			Teacher teacher = teacherService.findTeacherByUsername(getUserName());
-			if(group == null || group.equals("")) {
-				resultReadFileExel = handleFileExelService.readFileExel(file, teacher, null, false);
-			}
-			if(resultReadFileExel) {
-				model.addAttribute("success", true);
-				return "/teacher/create_all";
-			} else {
-				model.addAttribute("success", false);
-				return "/teacher/create_all";
-			}
+		if(file.isEmpty()) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FILE_IS_NOT_EXIST);
+			return "/teacher/create_all";
+		}
+		boolean resultReadFileExel = false;
+		Teacher teacher = teacherService.findTeacherByUsername(getUserName());
+		if(group == null || group.equals("")) {
+			resultReadFileExel = handleFileExelService.readFileExel(file, teacher, null, false);
+		}
+		if(resultReadFileExel) {
+			model.addAttribute("success", true);
+			return "/teacher/create_all";
 		} else {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_WHILE_READ_FILE);
 			model.addAttribute("success", false);
 			return "/teacher/create_all";
 		}
@@ -196,6 +203,11 @@ public class TeacherController {
 	public String createExaminationGet(Model model) throws IOException {
 		if(getUserName() != null) {
 			Teacher teacher = teacherService.findGroupIdByUsername(getUserName());
+			if(teacher == null) {
+				model.addAttribute("success", false);
+				model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_GROUP);
+				return "/teacher/test";
+			}
 			ArrayList<String> groups = new ArrayList<>();
 			for(Group group : teacher.getGroups()) {
 				groups.add(group.getName());
@@ -210,21 +222,37 @@ public class TeacherController {
 	@SuppressWarnings({ "deprecation", "incomplete-switch" })
 	@RequestMapping(value = "/test", method = RequestMethod.POST)
 	public String createExaminationPost(@RequestParam("file") MultipartFile file, @RequestParam("timer") String timer,
-				@RequestParam("group") String group, Model model) {
-		if (!file.isEmpty()) {
-			boolean resultReadFileWord= false;
-			if(group != null) {
-				resultReadFileWord = handleFileWordService.readFileWord(file, teacherService.findTeacherByUsername(getUserName()), groupService.findGroupByGroupName(group), timer);
-			}
-			if(resultReadFileWord) {
-				model.addAttribute("success", true);
-				return "/teacher/test";
-			} else {
-				model.addAttribute("success", false);
-				return "/teacher/test";
-			}
+				@RequestParam(value = "group", required = false) String group, Model model) {
+		if(group == null) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/teacher/test";
+		} else if(file.isEmpty()) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FILE_IS_NOT_EXIST);
+			return "/teacher/test";
+		} else if(timer.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			return "/teacher/test";
+		}
+		try {
+			Long.parseLong(timer);
+		} catch (Exception e) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NOT_NUMBER);
+			return "/teacher/test";
+		}
 
+		boolean resultReadFileWord= false;
+		if(group != null) {
+			resultReadFileWord = handleFileWordService.readFileWord(file, teacherService.findTeacherByUsername(getUserName()), groupService.findGroupByGroupName(group), timer);
+		}
+		if(resultReadFileWord) {
+			model.addAttribute("success", true);
+			return "/teacher/test";
 		} else {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_WHILE_READ_FILE);
 			model.addAttribute("success", false);
 			return "/teacher/test";
 		}
@@ -240,25 +268,36 @@ public class TeacherController {
 	@RequestMapping(value = "/test_all", method = RequestMethod.POST)
 	public String createExaminationAllPost(@RequestParam("file") MultipartFile file, @RequestParam("timer") String timer,
 										@RequestParam("group") String group, Model model) {
-		if (!file.isEmpty()) {
-			boolean resultReadFileWord= false;
-			if(group == null || group.equals("")) {
-				resultReadFileWord = handleFileWordService.readFileWord(file, teacherService.findTeacherByUsername(getUserName()), null, timer);
-			}
-			if(resultReadFileWord) {
-				model.addAttribute("success", true);
-				return "/teacher/test_all";
-			} else {
-				model.addAttribute("success", false);
-				return "/teacher/test_all";
-			}
+		if(file.isEmpty()) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FILE_IS_NOT_EXIST);
+			return "/teacher/test_all";
+		} else if(timer.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			return "/teacher/test_all";
+		}
+		try {
+			Long.parseLong(timer);
+		} catch (Exception e) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NOT_NUMBER);
+			return "/teacher/test_all";
+		}
+
+		boolean resultReadFileWord= false;
+		if(group == null || group.equals("")) {
+			resultReadFileWord = handleFileWordService.readFileWord(file, teacherService.findTeacherByUsername(getUserName()), null, timer);
+		}
+		if(resultReadFileWord) {
+			model.addAttribute("success", true);
+			return "/teacher/test_all";
 		} else {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_WHILE_READ_FILE);
 			model.addAttribute("success", false);
 			return "/teacher/test_all";
 		}
 	}
-
-
 
 	@RequestMapping(value = "/preview", method = RequestMethod.GET)
 	public String previewExaminationGet(Model model) throws IOException {
@@ -275,8 +314,18 @@ public class TeacherController {
 	}
 
 	@RequestMapping(value = "/preview", method = RequestMethod.POST)
-	public String previewExaminationPost(@RequestParam("group") String group, Model model) throws IOException {
+	public String previewExaminationPost(@RequestParam(value = "group", required = false) String group, Model model) throws IOException {
+		if(group == null) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			model.addAttribute("success", false);
+			return "/teacher/preview";
+		}
 		List<Question> list = questionService.getExaminationByGroupId(groupService.findGroupByGroupName(group).getId());
+		if(list.isEmpty()) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NOT_EXAM);
+			model.addAttribute("success", false);
+			return "/teacher/preview";
+		}
 		Map<Question, List<Answer>> map = new HashMap<>();
 		ArrayList<Examination> examinations = new ArrayList<>();
 		int count = 0;
@@ -291,6 +340,7 @@ public class TeacherController {
 		model.addAttribute("examinations", examinations);
 		model.addAttribute("groups", group);
 
+		model.addAttribute("success", true);
 		return "/teacher/preview";
 	}
 
@@ -310,7 +360,16 @@ public class TeacherController {
 	}
 
 	@RequestMapping(value = "/output", method = RequestMethod.POST)
-	public ModelAndView outputPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group, HttpServletResponse response) throws IOException {
+	public ModelAndView outputPost(@RequestParam("fileName") String fileName, @RequestParam(value = "group", required = false) String group, HttpServletResponse response, ModelMap model) throws IOException {
+		if(group == null) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			model.addAttribute("success", false);
+			return new ModelAndView("/teacher/output", model);
+		} else if(fileName.equals("")) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			model.addAttribute("success", false);
+			return new ModelAndView("/teacher/output", model);
+		}
 		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
 		ArrayList<Object> params = new ArrayList<>();
 		params.add(groupService.findGroupByGroupName(group).getId());
@@ -326,7 +385,18 @@ public class TeacherController {
 	}
 
 	@RequestMapping(value = "/output_all", method = RequestMethod.POST)
-	public ModelAndView outputAllPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group, HttpServletResponse response) throws IOException {
+	public ModelAndView outputAllPost(@RequestParam("fileName") String fileName, HttpServletResponse response, ModelMap model) throws IOException {
+		if(fileName.equals("")) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			model.addAttribute("success", false);
+			return new ModelAndView("/teacher/output_all", model);
+		}
+		ArrayList<Group> groups = groupService.findAllGroup();
+		if(groups.isEmpty()) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_GROUP_FOR_OUTPUT);
+			model.addAttribute("success", false);
+			return new ModelAndView("/teacher/output_all", model);
+		}
 		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
 		ArrayList<Object> params = new ArrayList<>();
 		params.add(null);
@@ -351,7 +421,17 @@ public class TeacherController {
 	}
 
 	@RequestMapping(value = "/output_test", method = RequestMethod.POST)
-	public ModelAndView outputTestPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group, @RequestParam("original") String original, HttpServletResponse response) throws IOException {
+	public ModelAndView outputTestPost(@RequestParam("fileName") String fileName, @RequestParam(value = "group", required = false) String group, @RequestParam("original") String original,
+					   HttpServletResponse response, ModelMap model) throws IOException {
+		if(group == null) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			model.addAttribute("success", false);
+			return new ModelAndView("/teacher/output_test", model);
+		} else if(fileName.equals("")) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			model.addAttribute("success", false);
+			return new ModelAndView("/teacher/output_test", model);
+		}
 		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
 		ArrayList<Object> params = new ArrayList<>();
 		params.add(groupService.findGroupByGroupName(group).getId());
@@ -368,8 +448,19 @@ public class TeacherController {
 	}
 
 	@RequestMapping(value = "/output_all_test", method = RequestMethod.POST)
-	public ModelAndView outputAllTestPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group,
-						  @RequestParam("original") String original, HttpServletResponse response) throws IOException {
+	public ModelAndView outputAllTestPost(@RequestParam("fileName") String fileName, @RequestParam("original")
+		String original, HttpServletResponse response, ModelMap model) throws IOException {
+		if(fileName.equals("")) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			model.addAttribute("success", false);
+			return new ModelAndView("/teacher/output_all_test", model);
+		}
+		ArrayList<Group> groups = groupService.findAllGroup();
+		if(groups.isEmpty()) {
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_GROUP_FOR_OUTPUT);
+			model.addAttribute("success", false);
+			return new ModelAndView("/teacher/output_all_test", model);
+		}
 		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
 		ArrayList<Object> params = new ArrayList<>();
 		params.add(null);

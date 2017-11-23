@@ -28,7 +28,11 @@
 					<button class="btn btn-primary"><a id="bt-login" href="/teacher">Hủy xem</a></button>
 				</form>
 			</div>
+			<c:if test="${success != null && !success}">
+				<div style="color: red"><c:out value="${error_message}"/></div>
+			</c:if>
 
+			<c:if test="${success != null && success}">
 			<div style="height: 90%; overflow: scroll;">
 				<c:forEach items="${examinations}" var="examination" varStatus="itr">
 					<div class="break-question"></div>
@@ -60,6 +64,7 @@
 					</table>
 				</c:forEach>
 			</div>
+			</c:if>
 		</div>
 
 		<%@ include file="condition.jsp"%>
