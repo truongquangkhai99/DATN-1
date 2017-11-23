@@ -162,9 +162,8 @@ public class AdminController {
 			userService.saveUser(admin);
 
 			model.addAttribute("success", true);
+			return "login";
 		}
-
-		return "login";
 	}
 
 	@RequestMapping(value = "/info_teacher", method = RequestMethod.GET)

@@ -30,7 +30,7 @@ public final class Constant {
 		public static final String ERROR_FORMAT_PASS = "Mật khẩu bạn nhập không đúng định dạng (định dạng đúng là các ký tự 1-9 hoặc a-z hoặc A-Z và độ dài không quá 20 ký tự)";
 		public static final String ERROR_PASS_INCORRECT = "Mật khẩu bạn nhập không đúng";
 		public static final String ERROR_RE_PASS_INCORRECT = "Mật khẩu bạn nhập lại không khớp với mật khẩu trước đó";
-		public static final String ERROR_EMPTY_INPUT = "Bạn chưa nhập dữ liệu";
+		public static final String ERROR_EMPTY_INPUT = "Bạn chưa nhập đầy đủ dữ liệu";
 		public static final String ERROR_EXISTED_USERNAME = "Tên tài khoản đã tồn tại";
 		public static final String ERROR_NO_DATA = "Chưa có dữ liệu";
 	}

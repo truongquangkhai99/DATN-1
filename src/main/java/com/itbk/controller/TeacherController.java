@@ -1,11 +1,16 @@
 package com.itbk.controller;
 
+import com.itbk.constant.Constant;
 import com.itbk.dto.Examination;
 import com.itbk.model.*;
 import com.itbk.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +47,12 @@ public class TeacherController {
 	private TeacherService teacherService;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
 	private HandleFileWordService handleFileWordService;
 
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
@@ -62,6 +73,61 @@ public class TeacherController {
 		model.addAttribute("countStudent", numberOfStudent);
 
 		return "/teacher/info";
+	}
+
+	@RequestMapping(value = "/changeinfo", method = RequestMethod.GET)
+	public String getChangeInfo() {
+
+		return "/teacher/changeinfo";
+	}
+
+	@RequestMapping(value = "/changeinfo", method = RequestMethod.POST)
+	public String postChangeInfo(@RequestParam("account") String account, @RequestParam("oldpass") String oldPass,
+								 @RequestParam("newpass") String newPass, @RequestParam("renewpass") String reNewPass, Model model) {
+		User teacher = userService.findByUserName(getUserName());
+		if(account.equals("") || oldPass.equals("") || newPass.equals("") || reNewPass.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
+			return "/teacher/changeinfo";
+		}
+		else if(!account.matches(Constant.Pattern.PATTERN_USERNAME)) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FORMAT_USERNAME);
+			return "/teacher/changeinfo";
+		}
+		else if(!passwordEncoder.matches(oldPass, teacher.getPassword())) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_PASS_INCORRECT);
+			return "/teacher/changeinfo";
+		}
+		else if(!newPass.matches(Constant.Pattern.PATTERN_PASS)) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FORMAT_PASS);
+			return "/teacher/changeinfo";
+		}
+		else if(!reNewPass.equals(newPass)) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_RE_PASS_INCORRECT);
+			return "/teacher/changeinfo";
+		} else {
+			teacher.setUsername(account);
+			teacher.setPassword(passwordEncoder.encode(newPass));
+
+			Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+			Set<Role> roles = teacher.getRoles();
+			for (Role role : roles) {
+				grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+			}
+
+			org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(teacher.getUsername(), teacher.getPassword(), grantedAuthorities);
+			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+
+			userService.saveUser(teacher);
+
+			model.addAttribute("success", true);
+			return "login";
+		}
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
