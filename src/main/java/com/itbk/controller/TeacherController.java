@@ -368,7 +368,8 @@ public class TeacherController {
 	}
 
 	@RequestMapping(value = "/output_all_test", method = RequestMethod.POST)
-	public ModelAndView outputAllTestPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group, @RequestParam("original") String original, HttpServletResponse response) throws IOException {
+	public ModelAndView outputAllTestPost(@RequestParam("fileName") String fileName, @RequestParam("group") String group,
+						  @RequestParam("original") String original, HttpServletResponse response) throws IOException {
 		response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xlsx");
 		ArrayList<Object> params = new ArrayList<>();
 		params.add(null);
@@ -376,6 +377,62 @@ public class TeacherController {
 		params.add(original);
 
 		return new ModelAndView("excelPOIView", "params", params);
+	}
+
+	@RequestMapping(value = "/infostudent", method = RequestMethod.GET)
+	public String infoStudentGet(Model model) throws IOException {
+		if (getUserName() != null) {
+			Object objects = groupService.findGroupsByTeacherId(teacherService.findTeacherByUsername(getUserName()).getId());
+			ArrayList<String> groups = new ArrayList<>();
+			if(objects != null) {
+				for(Group group : (ArrayList<Group>)objects) {
+					groups.add(group.getName());
+				}
+			}
+			model.addAttribute("groups", groups);
+		}
+
+		return "/teacher/infostudent";
+	}
+
+	@RequestMapping(value = "/infostudent", method = RequestMethod.POST)
+	public String infoStudentPost(@RequestParam(value = "group", required = false) String nameGroup, Model model) throws IOException {
+		if(nameGroup == null) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/teacher/infostudent";
+		}
+		Group group = groupService.findGroupByGroupName(nameGroup);
+		model.addAttribute("nameGroup", group.getName());
+		try {
+			Object students = studentService.findAllByGroupId(group.getId());
+			model.addAttribute("countStudent", ((ArrayList<Group>)(students)).size());
+			int countAllStudentTested = 0;
+			int countAllStudentNotTested = 0;
+			for(Student student : ((ArrayList<Student>)(students))) {
+				if(student.isTested()) {
+					countAllStudentTested ++;
+				} else {
+					countAllStudentNotTested ++;
+				}
+			}
+			model.addAttribute("countStudentTested", countAllStudentTested);
+			model.addAttribute("countStudentNotTested", countAllStudentNotTested);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Object objects = groupService.findGroupsByTeacherId(teacherService.findTeacherByUsername(getUserName()).getId());
+		ArrayList<String> groups = new ArrayList<>();
+		if(objects != null) {
+			for(Group groupNew : (ArrayList<Group>)objects) {
+				groups.add(groupNew.getName());
+			}
+		}
+		model.addAttribute("groups", groups);
+
+		model.addAttribute("success", true);
+		return "/teacher/infostudent";
 	}
 
 	public String getUserName() {

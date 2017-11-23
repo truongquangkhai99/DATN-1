@@ -16,7 +16,7 @@
 					</div>
 					<a href="#group-student" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý nhóm sinh viên<img src="/image/arrow_down.png" class="arrow-down"></a>
 					<div class="collapse" id="group-student">
-						<a href="#" class="list-group-item">Thông tin nhóm sinh viên</a>
+						<a href="/teacher/infostudent" class="list-group-item">Thông tin nhóm sinh viên</a>
 
 						<a href="#group-type" class="list-group-item" data-toggle="collapse" data-parent="#group-student">Thêm nhóm sinh viên<img src="/image/arrow_down.png" class="arrow-down"></a>
 						<div class="collapse" id="group-type">
