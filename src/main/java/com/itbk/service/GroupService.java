@@ -26,4 +26,6 @@ public interface GroupService {
 	void deleteGroupById(int id);
 
 	void deleteAllGroupByTeacherId(int teacherId);
+
+	void updateGroupName(String name, int id);
 }

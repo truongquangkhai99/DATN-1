@@ -66,7 +66,7 @@ public class TeacherController {
 		ArrayList<Group> groups = (ArrayList<Group>)groupService.findGroupsByTeacherId(teacherService.findTeacherByUsername(userName).getId());
 		int numberOfStudent = 0;
 		for(Group group : groups) {
-			numberOfStudent += (long)studentService.countStudentByGroupId(group.getId());
+			numberOfStudent += (int)studentService.countStudentByGroupId(group.getId());
 		}
 
 		model.addAttribute("countGroup", groups.size());
@@ -433,6 +433,46 @@ public class TeacherController {
 
 		model.addAttribute("success", true);
 		return "/teacher/infostudent";
+	}
+
+	@RequestMapping(value = "/change_group", method = RequestMethod.GET)
+	public String changeInfoGroupGet(Model model) throws IOException {
+		if (getUserName() != null) {
+			Object objects = groupService.findGroupsByTeacherId(teacherService.findTeacherByUsername(getUserName()).getId());
+			ArrayList<String> groups = new ArrayList<>();
+			if(objects != null) {
+				for(Group group : (ArrayList<Group>)objects) {
+					groups.add(group.getName());
+				}
+			}
+			model.addAttribute("groups", groups);
+		}
+
+		return "/teacher/change_group";
+	}
+
+	@RequestMapping(value = "/change_group", method = RequestMethod.POST)
+	public String changeInfoGroupPost(@RequestParam(value = "group", required = false) String nameGroup,
+				  @RequestParam(value = "name") String name, Model model) throws IOException {
+		if(nameGroup == null) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/teacher/change_group";
+		}
+		Group group = groupService.findGroupByGroupName(nameGroup);
+		groupService.updateGroupName(name, group.getId());
+
+		Object objects = groupService.findGroupsByTeacherId(teacherService.findTeacherByUsername(getUserName()).getId());
+		ArrayList<String> groups = new ArrayList<>();
+		if(objects != null) {
+			for(Group groupNew : (ArrayList<Group>)objects) {
+				groups.add(groupNew.getName());
+			}
+		}
+		model.addAttribute("groups", groups);
+
+		model.addAttribute("success", true);
+		return "/teacher/change_group";
 	}
 
 	public String getUserName() {

@@ -32,4 +32,9 @@ public interface GroupRepository extends CrudRepository<Group, Integer> {
 	@Transactional
 	@Query(value="DELETE FROM groups WHERE teacher_id = :teacher_id", nativeQuery = true)
 	void deleteAllGroupByTeacherId(@Param("teacher_id") int idTeacher);
+
+	@Modifying
+	@Transactional
+	@Query(value="UPDATE groups SET name = :name where id = :id", nativeQuery = true)
+	void updateGroupName(@Param("name") String name, @Param("id") int id);
 }

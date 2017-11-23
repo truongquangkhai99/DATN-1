@@ -24,7 +24,7 @@
 							<a href="/teacher/create_all" class="list-group-item list-group-item-warning" data-parent="#group-type"><img src="/image/arrow_right.png" class="arrow-right">Thêm toàn bộ</a>
 						</div>
 
-						<a href="#" class="list-group-item" >Sửa nhóm sinh viên</a>
+						<a href="/teacher/change_group" class="list-group-item" >Thay đổi tên nhóm sinh viên</a>
 						<a href="#" class="list-group-item">Xóa nhóm sinh viên</a>
 					</div>
 
@@ -38,7 +38,6 @@
 							<a href="/teacher/test_all" class="list-group-item list-group-item-warning" data-parent="#group-type-test"><img src="/image/arrow_right.png" class="arrow-right">Thêm toàn bộ</a>
 						</div>
 
-						<a href="#" class="list-group-item">Sửa đề thi</a>
 						<a href="#" class="list-group-item">Xóa đề thi</a>
 					</div>
 
