@@ -95,6 +95,8 @@ public class AdminController {
 		String userName = getUserName();
 		if(userName != null) {
 			model.addAttribute("username", userName);
+		} else {
+			return "redirect:/login";
 		}
 		Object countAllTeacher = teacherService.countAllTeacher();
 		Object countAllGroup = groupService.countAllGroup();

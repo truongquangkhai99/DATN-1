@@ -42,7 +42,27 @@ public class TeacherController {
 	private TeacherService teacherService;
 
 	@Autowired
-	HandleFileWordService handleFileWordService;
+	private HandleFileWordService handleFileWordService;
+
+	@RequestMapping(value = "/info", method = RequestMethod.GET)
+	public String infoTeacherGet(HttpServletRequest request, Model model) throws IOException {
+		String userName = getUserName();
+		if(userName != null) {
+			model.addAttribute("username", userName);
+		} else {
+			return "redirect:/login";
+		}
+		ArrayList<Group> groups = (ArrayList<Group>)groupService.findGroupsByTeacherId(teacherService.findTeacherByUsername(userName).getId());
+		int numberOfStudent = 0;
+		for(Group group : groups) {
+			numberOfStudent += (long)studentService.countStudentByGroupId(group.getId());
+		}
+
+		model.addAttribute("countGroup", groups.size());
+		model.addAttribute("countStudent", numberOfStudent);
+
+		return "/teacher/info";
+	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String createGroupGet(HttpServletRequest request, Model model) throws IOException {

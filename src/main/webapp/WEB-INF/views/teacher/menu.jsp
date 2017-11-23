@@ -9,6 +9,11 @@
 		<div class="col-md-4">
 			<div id="MainMenu">
 				<div class="list-group panel">
+					<a href="#manager-teacher" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý giảng viên<img src="/image/arrow_down.png" class="arrow-down"></a>
+					<div class="collapse" id="manager-teacher">
+						<a href="/teacher/info" class="list-group-item">Thông tin chung</a>
+						<a href="#" class="list-group-item">Thay đổi thông tin</a>
+					</div>
 					<a href="#group-student" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Quản lý nhóm sinh viên<img src="/image/arrow_down.png" class="arrow-down"></a>
 					<div class="collapse" id="group-student">
 						<a href="#" class="list-group-item">Thông tin nhóm sinh viên</a>

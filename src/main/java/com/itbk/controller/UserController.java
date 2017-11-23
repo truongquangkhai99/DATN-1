@@ -38,7 +38,7 @@ public class UserController {
 	// Controller for teacher
 	@RequestMapping(value = "/teacher", method = RequestMethod.GET)
 	public String teacherPage(Model model) {
-		return "/teacher/teacher";
+		return "redirect:/teacher/info";
 	}
 
 	// Controller for student
