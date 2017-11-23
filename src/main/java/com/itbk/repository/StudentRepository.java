@@ -62,4 +62,7 @@ public interface StudentRepository extends CrudRepository<Student, Integer> {
 	@Query(value="DELETE FROM students WHERE group_id = :groupid", nativeQuery = true)
 	void deleteAllStudentByGroupId(@Param("groupid") int groupId);
 
+	@Query(value="SELECT * FROM students where idb = :userName", nativeQuery = true)
+	Student findStudentByUsername(@Param("userName") String username);
+
 }

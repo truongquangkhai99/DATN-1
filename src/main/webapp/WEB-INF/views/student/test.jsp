@@ -72,7 +72,7 @@
 					var timer = duration
 					var minutes, seconds;
 
-					var interVal=  setInterval(function () {
+					var interVal = setInterval(function () {
 						timerGlobal = timer;
 						minutes = parseInt(timer / 60, 10);
 						seconds = parseInt(timer % 60, 10);

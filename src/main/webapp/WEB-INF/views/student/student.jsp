@@ -6,8 +6,8 @@
 
 <html>
 	<head>
-	    <title>Sinh viên</title>
-	    <%@ include file="../head_tag.jsp"%>
+		<title>Sinh viên</title>
+		<%@ include file="../head_tag.jsp"%>
 	</head>
 	<body>
 
@@ -15,8 +15,17 @@
 
 		<%
 			boolean isTested = false;
+			double score = 0.0;
 			if(request.getAttribute("isTested") != null) {
-				isTested = (boolean)request.getAttribute("isTested");
+				try {
+					isTested = (boolean)request.getAttribute("isTested");
+					if(request.getAttribute("score") != null) {
+						score = (double)request.getAttribute("score");
+					}
+					System.out.println("score = " + score);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
 		%>
 
@@ -44,6 +53,8 @@
 			if(<%=isTested%> === true) {
 				document.getElementById("student-test").style.display = 'none';
 				document.getElementById("info-is-tested").innerHTML  = 'BẠN ĐÃ HOÀN THÀNH BÀI THI!';
+				var result = 'ĐIỂM THI CỦA BẠN LÀ ' + <%=score%> + ' ĐIỂM';
+				document.getElementById("info-is-tested").innerHTML  = result;
 				document.getElementById("info-is-tested").style.color = 'RED';
 			} else {
 				document.getElementById("info-is-tested").innerHTML  = 'BẠN CHƯA HOÀN THÀNH BÀI THI!';

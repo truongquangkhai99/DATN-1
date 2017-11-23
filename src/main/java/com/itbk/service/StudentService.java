@@ -40,4 +40,6 @@ public interface StudentService {
 	void deleteStudentById(int id);
 
 	void deleteAllStudentByGroupId(int groupId);
+
+	Student findStudentByUsername(String username);
 }

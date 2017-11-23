@@ -97,4 +97,9 @@ public class StudentServiceImpl implements StudentService {
 	public void deleteAllStudentByGroupId(int groupId) {
 		studentRepository.deleteAllStudentByGroupId(groupId);
 	}
+
+	@Override
+	public Student findStudentByUsername(String username) {
+		return studentRepository.findStudentByUsername(username);
+	}
 }

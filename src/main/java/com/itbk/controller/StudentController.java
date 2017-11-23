@@ -88,6 +88,8 @@ public class StudentController {
 		model.addAttribute("examinations", examinations);
 		if(userName != null) {
 			model.addAttribute("isTested", studentService.findIsTestedByUsername(getUserName()));
+			System.out.println("score code : " + studentService.findStudentByUsername(getUserName()).getScore());
+			model.addAttribute("score", studentService.findStudentByUsername(getUserName()).getScore());
 			model.addAttribute("timer", studentService.findTimerByUsername(getUserName()));
 		}
 
@@ -130,7 +132,7 @@ public class StudentController {
 							}
 						}
 					}
-					score += ((numOfAnswerRight - numOfAnswerWrong)* 1.0 / numOfAnswerRightOriginal * pointPerQuestion);
+					score += ((numOfAnswerRight - numOfAnswerWrong) * 1.0 / numOfAnswerRightOriginal * pointPerQuestion);
 				}
 			}
 		}
@@ -138,7 +140,6 @@ public class StudentController {
 		studentService.updateIsTested(getUserName(), true);
 		studentService.updateTimer(getUserName(), 0);
 
-		model.addAttribute("score", score);
 		return "redirect:/student/test";
 	}
 
