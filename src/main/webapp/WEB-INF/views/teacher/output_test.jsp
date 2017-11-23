@@ -6,7 +6,7 @@
 
 <html>
 	<head>
-		<title>Giảng viên - Xuất file theo từng nhóm</title>
+		<title>Giảng viên - Xuất file từng nhóm theo định dạng</title>
 		<%@ include file="../head_tag.jsp"%>
 	</head>
 	<body>

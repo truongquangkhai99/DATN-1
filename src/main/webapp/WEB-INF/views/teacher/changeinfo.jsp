@@ -6,7 +6,7 @@
 
 <html>
 	<head>
-		<title>Quản trị - Thêm giảng viên</title>
+		<title>Quản trị - Thay đổi thông tin giảng viên</title>
 		<%@ include file="../head_tag.jsp"%>
 	</head>
 	<body>

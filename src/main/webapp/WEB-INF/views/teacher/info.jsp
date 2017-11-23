@@ -6,7 +6,7 @@
 
 <html>
 	<head>
-		<title>Quản trị</title>
+		<title>Giảng viên - thông tin chung</title>
 		<%@ include file="../head_tag.jsp"%>
 	</head>
 

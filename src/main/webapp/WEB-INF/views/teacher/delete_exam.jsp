@@ -6,7 +6,7 @@
 
 <html>
 	<head>
-		<title>Giảng viên - Xóa nhóm sinh viên</title>
+		<title>Giảng viên - Xóa đề thi theo nhóm sinh viên</title>
 		<%@ include file="../head_tag.jsp"%>
 	</head>
 	<body>
