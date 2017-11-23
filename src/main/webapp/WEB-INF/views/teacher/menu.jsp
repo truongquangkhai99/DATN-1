@@ -38,7 +38,7 @@
 							<a href="/teacher/test_all" class="list-group-item list-group-item-warning" data-parent="#group-type-test"><img src="/image/arrow_right.png" class="arrow-right">Thêm toàn bộ</a>
 						</div>
 
-						<a href="#" class="list-group-item">Xóa đề thi</a>
+						<a href="/teacher/delete_exam" class="list-group-item">Xóa đề thi</a>
 					</div>
 
 					<a href="#ouput-file" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Xuất theo file đầu vào<img src="/image/arrow_down.png" class="arrow-down"></a>

@@ -517,6 +517,41 @@ public class TeacherController {
 		return "/teacher/delete_group";
 	}
 
+	@RequestMapping(value = "/delete_exam", method = RequestMethod.GET)
+	public String deleteExamGet(Model model) throws IOException {
+		if (getUserName() != null) {
+			Object objects = groupService.findGroupsByTeacherId(teacherService.findTeacherByUsername(getUserName()).getId());
+			ArrayList<String> groups = new ArrayList<>();
+			if(objects != null) {
+				for(Group group : (ArrayList<Group>)objects) {
+					groups.add(group.getName());
+				}
+			}
+			model.addAttribute("groups", groups);
+		}
+
+		return "/teacher/delete_exam";
+	}
+
+	@RequestMapping(value = "/delete_exam", method = RequestMethod.POST)
+	public String deleteExamPost(@RequestParam(value = "group", required = false) String nameGroup, Model model) throws IOException {
+		if(nameGroup == null) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/teacher/delete_exam";
+		}
+		Group group = groupService.findGroupByGroupName(nameGroup);
+		ArrayList<Question> questions = (ArrayList<Question>)questionService.findAllQuestionByGroupId(group.getId());
+		questionService.deleteAllQuestionByGroupId(group.getId());
+		for(Question question : questions) {
+			answerService.deleteAllAnswerByQuestionId(question.getId());
+			questionService.deleteQuestionById(question.getId());
+		}
+
+		model.addAttribute("success", true);
+		return "/teacher/delete_exam";
+	}
+
 
 	public String getUserName() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
