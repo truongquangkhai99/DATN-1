@@ -21,13 +21,13 @@ public final class Constant {
 	}
 
 	public final class Pattern {
-		public static final String PATTERN_USERNAME = "\\w*";
-		public static final String PATTERN_PASS = "\\w*";
+		public static final String PATTERN_USERNAME = "([a-zA-Z1-9_]{1,20})";
+		public static final String PATTERN_PASS = "([a-zA-Z1-9]{1,20})";
 	}
 
 	public final class ErrorMessage {
-		public static final String ERROR_FORMAT_USERNAME = "Tài khoản bạn nhập không đúng định dạng (định dạng đúng là các ký tự a-z hoặc A-Z hoặc dấu '_')";
-		public static final String ERROR_FORMAT_PASS = "Mật khẩu bạn nhập không đúng định dạng (định dạng đúng là các ký tự a-z hoặc A-Z hoặc dấu '_')";
+		public static final String ERROR_FORMAT_USERNAME = "Tài khoản bạn nhập không đúng định dạng (định dạng đúng là các ký tự 1-9 hoặc a-z hoặc A-Z hoặc dấu '_' và độ dài không quá 20 ký tự)";
+		public static final String ERROR_FORMAT_PASS = "Mật khẩu bạn nhập không đúng định dạng (định dạng đúng là các ký tự 1-9 hoặc a-z hoặc A-Z và độ dài không quá 20 ký tự)";
 		public static final String ERROR_PASS_INCORRECT = "Mật khẩu bạn nhập không đúng";
 		public static final String ERROR_RE_PASS_INCORRECT = "Mật khẩu bạn nhập lại không khớp với mật khẩu trước đó";
 		public static final String ERROR_EMPTY_INPUT = "Bạn chưa nhập dữ liệu";

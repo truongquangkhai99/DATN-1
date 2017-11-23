@@ -65,6 +65,10 @@ public class AdminController {
 				model.addAttribute("success", false);
 				model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FORMAT_USERNAME);
 				return "/admin/create";
+			} else if(!password.matches(Constant.Pattern.PATTERN_PASS)) {
+				model.addAttribute("success", false);
+				model.addAttribute("error_message", Constant.ErrorMessage.ERROR_FORMAT_PASS);
+				return "/admin/create";
 			} else {
 				Teacher teacher = new Teacher(name, account, passwordEncoder.encode(password));
 				teacherService.saveTeacher(teacher);
@@ -184,11 +188,6 @@ public class AdminController {
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
 			return "/admin/info_teacher";
 		}
-		if(nameTeacher.equals("")) {
-			model.addAttribute("success", false);
-			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
-			return "/admin/info_teacher";
-		}
 		Teacher teacher = teacherService.findTeacherByName(nameTeacher);
 		model.addAttribute("nameTeacher", teacher.getName());
 		try {
@@ -239,7 +238,7 @@ public class AdminController {
 			model.addAttribute("success", false);
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
 			return "/admin/edit_pass_teacher";
-		}else if(nameTeacher.equals("") || password.equals("")) {
+		} else if(password.equals("")) {
 			model.addAttribute("success", false);
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
 			return "/admin/edit_pass_teacher";
@@ -287,13 +286,17 @@ public class AdminController {
 			model.addAttribute("success", false);
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
 			return "/admin/delete_logic";
-		}else if(nameTeacher.equals("")) {
-			model.addAttribute("success", false);
-			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
-			return "/admin/delete_logic";
 		}
 		userService.updateEnabled(false, userService.findByUserName(teacherService.findTeacherByName(nameTeacher).getAccount()).getId());
 
+		Object objects = teacherService.findAllTeacher();
+		ArrayList<String> teachers = new ArrayList<>();
+		if(objects != null) {
+			for(Teacher teacher : (ArrayList<Teacher>)objects) {
+				teachers.add(teacher.getName());
+			}
+		}
+		model.addAttribute("teachers", teachers);
 		model.addAttribute("success", true);
 		return "/admin/delete_logic";
 	}
@@ -320,10 +323,6 @@ public class AdminController {
 			model.addAttribute("success", false);
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
 			return "/admin/delete_physic";
-		}else if(nameTeacher.equals("")) {
-			model.addAttribute("success", false);
-			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
-			return "/admin/delete_physic";
 		}
 		Teacher teacher = teacherService.findTeacherByName(nameTeacher);
 		ArrayList<Group> groups = (ArrayList<Group>)groupService.findGroupsByTeacherId(teacher.getId());
@@ -345,6 +344,14 @@ public class AdminController {
 		teacherService.deleteTeacherById(teacher.getId());
 		userService.deleteUserById(userService.findByUserName(teacher.getAccount()).getId());
 
+		Object objects = teacherService.findAllTeacher();
+		ArrayList<String> teachers = new ArrayList<>();
+		if(objects != null) {
+			for(Teacher teacherNew : (ArrayList<Teacher>)objects) {
+				teachers.add(teacherNew.getName());
+			}
+		}
+		model.addAttribute("teachers", teachers);
 		model.addAttribute("success", true);
 		return "/admin/delete_physic";
 	}
