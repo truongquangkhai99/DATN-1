@@ -1,5 +1,6 @@
 package com.itbk.controller;
 
+import com.itbk.constant.Constant;
 import com.itbk.dto.Examination;
 import com.itbk.model.Answer;
 import com.itbk.model.Question;
@@ -29,13 +30,13 @@ public class StudentController {
 	private ArrayList<Examination> examinations = new ArrayList<>();
 
 	@Autowired
-	StudentService studentService;
+	private StudentService studentService;
 
 	@Autowired
-	QuestionService questionService;
+	private QuestionService questionService;
 
 	@Autowired
-	GroupService groupService;
+	private GroupService groupService;
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String studentTestGet(HttpServletRequest request, Model model) throws IOException {
@@ -56,6 +57,11 @@ public class StudentController {
 		examinations.clear();
 		String group = groupService.findGroupById(studentService.findGroupIdByUserName(getUserName())).getName();
 		List<Question> list = questionService.getExaminationByGroupId(groupService.findGroupByGroupName(group).getId());
+		if(list.isEmpty()) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NOT_EXAM_FOR_STUDENT);
+			return "/student/student";
+		}
 		Map<Question, List<Answer>> map = new HashMap<>();
 
 		for (Question a : list) {
@@ -88,7 +94,6 @@ public class StudentController {
 		model.addAttribute("examinations", examinations);
 		if(userName != null) {
 			model.addAttribute("isTested", studentService.findIsTestedByUsername(getUserName()));
-			System.out.println("score code : " + studentService.findStudentByUsername(getUserName()).getScore());
 			model.addAttribute("score", studentService.findStudentByUsername(getUserName()).getScore());
 			model.addAttribute("timer", studentService.findTimerByUsername(getUserName()));
 		}

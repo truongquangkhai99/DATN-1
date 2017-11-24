@@ -21,6 +21,7 @@
 
 		<%@ include file="condition.jsp"%>
 
+		<% session.setAttribute("score", request.getAttribute("score")); %>
 		<c:if test="${isTested != null && isTested}">
 			<c:redirect url = "/student"/>
 		</c:if>

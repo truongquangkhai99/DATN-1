@@ -5,7 +5,6 @@ import com.itbk.model.*;
 import com.itbk.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,10 +42,10 @@ public class AdminController {
 	private StudentService studentService;
 
 	@Autowired
-	QuestionService questionService;
+	private QuestionService questionService;
 
 	@Autowired
-	AnswerService answerService;
+	private AnswerService answerService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String listUploadedFiles(Model model) throws IOException {

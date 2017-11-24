@@ -19,10 +19,9 @@
 			if(request.getAttribute("isTested") != null) {
 				try {
 					isTested = (boolean)request.getAttribute("isTested");
-					if(request.getAttribute("score") != null) {
-						score = (double)request.getAttribute("score");
+					if(session.getAttribute("score") != null) {
+						score = (double)session.getAttribute("score");
 					}
-					System.out.println("score = " + score);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -34,6 +33,9 @@
 			<div id='info-is-tested' style="font-weight: bold; font-size: 16px"></div>
 
 			<button id="student-test" style="margin-top: 10px" class="btn btn-primary"><a id="bt-login" href="/student/test">Làm bài thi</a></button>
+			<c:if test="${success != null && !success}">
+				<div style="color: red"><c:out value="${error_message}"/></div>
+			</c:if>
 
 			<form action="/logout" method="post" id="logoutForm">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
