@@ -19,7 +19,7 @@ public interface StudentService {
 
 	ArrayList<String> findAllGroupId();
 
-	int findGroupIdByUserName(String userName);
+	Object findGroupIdByUserName(String userName);
 
 	void updateScore(String userName, double score);
 

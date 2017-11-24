@@ -44,7 +44,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public int findGroupIdByUserName(String userName) {
+	public Object findGroupIdByUserName(String userName) {
 		return studentRepository.findGroupIdByUserName(userName);
 	}
 

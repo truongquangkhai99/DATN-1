@@ -55,7 +55,7 @@ public class StudentController {
 		}
 
 		examinations.clear();
-		String group = groupService.findGroupById(studentService.findGroupIdByUserName(getUserName())).getName();
+		String group = groupService.findGroupById((int)studentService.findGroupIdByUserName(getUserName())).getName();
 		List<Question> list = questionService.getExaminationByGroupId(groupService.findGroupByGroupName(group).getId());
 		if(list.isEmpty()) {
 			model.addAttribute("success", false);

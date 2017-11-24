@@ -26,7 +26,7 @@ public interface StudentRepository extends CrudRepository<Student, Integer> {
 	ArrayList<String> findAllGroupId();
 
 	@Query(value="SELECT group_id FROM students where idb = :userName", nativeQuery = true)
-	int findGroupIdByUserName(@Param("userName") String userName);
+	Object findGroupIdByUserName(@Param("userName") String userName);
 
 	@Modifying
 	@Transactional
