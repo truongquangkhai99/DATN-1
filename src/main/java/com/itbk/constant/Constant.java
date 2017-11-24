@@ -39,5 +39,6 @@ public final class Constant {
 		public static final String ERROR_NOT_NUMBER = "Dữ liệu bạn nhập không đúng định dạng (định dạng đúng phải là một số tự nhiên)";
 		public static final String ERROR_NO_GROUP = "Không có nhóm nào để thêm đề thi";
 		public static final String ERROR_NO_GROUP_FOR_OUTPUT = "Không có nhóm nào để xuất file";
+		public static final String ERROR_NOT_EXAM_FOR_STUDENT = "Nhóm của bạn hiện chưa có đề thi";
 	}
 }
