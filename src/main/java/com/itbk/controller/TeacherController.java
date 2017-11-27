@@ -326,7 +326,6 @@ public class TeacherController {
 			model.addAttribute("success", false);
 			return "/teacher/preview";
 		}
-		Map<Question, List<Answer>> map = new HashMap<>();
 		ArrayList<Examination> examinations = new ArrayList<>();
 		int count = 0;
 		for (Question a : list) {
@@ -548,6 +547,10 @@ public class TeacherController {
 		if(nameGroup == null) {
 			model.addAttribute("success", false);
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NO_DATA);
+			return "/teacher/change_group";
+		} else if(name.equals("")) {
+			model.addAttribute("success", false);
+			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_EMPTY_INPUT);
 			return "/teacher/change_group";
 		}
 		Group group = groupService.findGroupByGroupName(nameGroup);

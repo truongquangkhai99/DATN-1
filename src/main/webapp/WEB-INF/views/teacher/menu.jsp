@@ -41,16 +41,16 @@
 						<a href="/teacher/delete_exam" class="list-group-item">Xóa đề thi</a>
 					</div>
 
-					<a href="#ouput-file" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Xuất theo file đầu vào<img src="/image/arrow_down.png" class="arrow-down"></a>
+					<a href="#ouput-file" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Xuất theo định dạng ban đầu<img src="/image/arrow_down.png" class="arrow-down"></a>
 					<div class="collapse" id="ouput-file">
 						<a href="/teacher/output" class="list-group-item">Xuất theo nhóm</a>
-						<a href="/teacher/output_all" class="list-group-item">Xuất toàn bộ</a>
+						<a href="/teacher/output_all" class="list-group-item">Xuất toàn bộ các nhóm</a>
 					</div>
 
-					<a href="#ouput-file-test" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Xuất theo bảng điểm<img src="/image/arrow_down.png" class="arrow-down"></a>
+					<a href="#ouput-file-test" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">Xuất theo định dạng bảng điểm<img src="/image/arrow_down.png" class="arrow-down"></a>
 					<div class="collapse" id="ouput-file-test">
 						<a href="/teacher/output_test" class="list-group-item">Xuất theo nhóm</a>
-						<a href="/teacher/output_all_test" class="list-group-item">Xuất toàn bộ</a>
+						<a href="/teacher/output_all_test" class="list-group-item">Xuất toàn bộ các nhóm</a>
 					</div>
 
 					<c:if test="${pageContext.request.userPrincipal.name != null}">

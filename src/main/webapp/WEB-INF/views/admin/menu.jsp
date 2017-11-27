@@ -22,8 +22,8 @@
 						<a href="/admin/edit_pass_teacher" class="list-group-item">Cấp lại mật khẩu giảng viên</a>
 						<a href="#group-type" class="list-group-item" data-toggle="collapse" data-parent="#admin-menu">Xóa giảng viên<img src="/image/arrow_down.png" class="arrow-down"></a>
 						<div class="collapse" id="group-type">
-							<a href="/admin/delete_logic" class="list-group-item list-group-item-warning" data-parent="#group-type"><img src="/image/arrow_right.png" class="arrow-right">Xóa logic</a>
-							<a href="/admin/delete_physic" class="list-group-item list-group-item-warning" data-parent="#group-type"><img src="/image/arrow_right.png" class="arrow-right">Xóa vật lý</a>
+							<a href="/admin/delete_logic" class="list-group-item list-group-item-warning" data-parent="#group-type"><img src="/image/arrow_right.png" class="arrow-right">Xóa tạm thời</a>
+							<a href="/admin/delete_physic" class="list-group-item list-group-item-warning" data-parent="#group-type"><img src="/image/arrow_right.png" class="arrow-right">Xóa vĩnh viễn</a>
 						</div>
 					</div>
 					<c:if test="${pageContext.request.userPrincipal.name != null}">
