@@ -56,14 +56,37 @@ public class StudentController {
 
 		examinations.clear();
 		String group = groupService.findGroupById((int)studentService.findGroupIdByUserName(getUserName())).getName();
-		List<Question> list = questionService.getExaminationByGroupId(groupService.findGroupByGroupName(group).getId());
-		if(list.isEmpty()) {
+		List<Question> arrayList = questionService.getExaminationByGroupId(groupService.findGroupByGroupName(group).getId());
+		if(arrayList.isEmpty()) {
 			model.addAttribute("success", false);
 			model.addAttribute("error_message", Constant.ErrorMessage.ERROR_NOT_EXAM_FOR_STUDENT);
 			return "/student/student";
 		}
-		Map<Question, List<Answer>> map = new HashMap<>();
+		LinkedList<Question> list = new LinkedList<>();
+		list.addAll(arrayList);
+		//start new
+		Random random = new Random();
+		int count = 0; // count number of questions
+		for(int i = list.size(); i > 0; i--) {
+			int randQuestion = random.nextInt(i);
+			Question question = list.get(randQuestion);
+			Examination examination = new Examination();
+			examination.setQuestionId(question.getId());
+			examination.setQuestion("Câu " + (++count) + ": " + question.getName());
+			examination.setRadio(question.isRadio());
+			ArrayList<Answer> arrayAnswer = new ArrayList<>();
+			for(int j = question.getAnswers().size(); j > 0; j--) {
+				int randAnswer = random.nextInt(j);
+				arrayAnswer.add(question.getAnswers().get(randAnswer));
+				question.getAnswers().remove(randAnswer);
+			}
+			examination.setAnswers(arrayAnswer);
+			examinations.add(examination);
+			list.remove(randQuestion);
+		}
+		//end new
 
+		/*Map<Question, List<Answer>> map = new HashMap<>();
 		for (Question a : list) {
 			map.put(a, a.getAnswers());
 		}
@@ -89,7 +112,7 @@ public class StudentController {
 				map.remove(questionList[ranQuestion]);
 				examinations.add(examination);
 			}
-		}
+		}*/
 
 		model.addAttribute("examinations", examinations);
 		if(userName != null) {
@@ -141,6 +164,7 @@ public class StudentController {
 				}
 			}
 		}
+		if(score < 0) score = 0;
 		studentService.updateScore(getUserName(), score);
 		studentService.updateIsTested(getUserName(), true);
 		studentService.updateTimer(getUserName(), 0);

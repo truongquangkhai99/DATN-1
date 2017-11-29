@@ -126,8 +126,4 @@ public class HandleFileExelService {
 		}
 	}
 
-	public void setInfoToStudent(Row row, String nameTeacher) {
-
-	}
-
 }
