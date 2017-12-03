@@ -57,7 +57,7 @@
 				document.getElementById("info-is-tested").innerHTML  = 'BẠN ĐÃ HOÀN THÀNH BÀI THI!';
 				var result = 'ĐIỂM THI CỦA BẠN LÀ ' + <%=score%> + ' ĐIỂM';
 				document.getElementById("info-is-tested").innerHTML  = result;
-				document.getElementById("info-is-tested").style.color = 'RED';
+				document.getElementById("info-is-tested").style.color = '#000000';
 			} else {
 				document.getElementById("info-is-tested").innerHTML  = 'BẠN CHƯA HOÀN THÀNH BÀI THI!';
 				document.getElementById("info-is-tested").style.color = 'BLUE';

@@ -7,7 +7,7 @@ body {
 	width: 70%;
 	height: 100%;
 	margin: 0px auto;
-	background-color: #e0e0d9;
+	background-color: #f49e42;
 	position: relative;
 }
 
@@ -42,10 +42,6 @@ body {
 }
 
 @import "bourbon";
-
-body {
-	background: #eee !important;
-}
 
 .wrapper {
 	margin-top: 80px;
@@ -94,8 +90,8 @@ body {
 }
 
 .break-question {
-	height: 2px;
-	background-color: #879dc1;
+	height: 3px;
+	background-color: #f10a0a;
 }
 
 .list-group.panel > .list-group-item {
@@ -112,7 +108,7 @@ body {
 	height: 5%;
 	font-weight: bold;
 	font-size: 18px;
-	color: #1aa521;
+	color: #4a08af;
 }
 
 #condition-preview {

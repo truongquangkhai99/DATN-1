@@ -117,7 +117,7 @@ public class HandleFileExelService {
 			if (userService.findByUserName(student.getIdB()) == null) {
 				User user = new User();
 				user.setUsername(student.getIdB());
-				user.setPassword(passwordEncoder.encode(student.getDateOfBirth()));
+				user.setPassword(passwordEncoder.encode(convertPassword(student.getDateOfBirth())));
 				HashSet<Role> roles = new HashSet<>();
 				roles.add(roleService.findByName(Constant.RoleType.ROLE_STUDENT));
 				user.setRoles(roles);
@@ -125,5 +125,22 @@ public class HandleFileExelService {
 			}
 		}
 	}
-
+	
+	public String convertPassword(String password) {
+		String []arrayPass = password.split("-");
+		if(arrayPass[1].equals("Jan")) arrayPass[1] = "01";
+		if(arrayPass[1].equals("Feb")) arrayPass[1] = "02";
+		if(arrayPass[1].equals("Mar")) arrayPass[1] = "03";
+		if(arrayPass[1].equals("Apr")) arrayPass[1] = "04";
+		if(arrayPass[1].equals("May")) arrayPass[1] = "05";
+		if(arrayPass[1].equals("Jun")) arrayPass[1] = "06";
+		if(arrayPass[1].equals("Jul")) arrayPass[1] = "07";
+		if(arrayPass[1].equals("Aug")) arrayPass[1] = "08";
+		if(arrayPass[1].equals("Sep")) arrayPass[1] = "09";
+		if(arrayPass[1].equals("Oct")) arrayPass[1] = "10";
+		if(arrayPass[1].equals("Nov")) arrayPass[1] = "11";
+		if(arrayPass[1].equals("Dec")) arrayPass[1] = "12";
+		
+		return arrayPass[0] + arrayPass[1] + arrayPass[2];
+	}
 }

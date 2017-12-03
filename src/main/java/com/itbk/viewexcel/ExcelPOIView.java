@@ -5,6 +5,7 @@ import com.itbk.model.Student;
 import com.itbk.service.GroupService;
 import com.itbk.service.StudentService;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +41,13 @@ public class ExcelPOIView extends AbstractView {
 			if(params.get(0) != null) {
 				if(params.size() == 3) {
 					Sheet sheet = getSheet(workbook, headerStyle, (String)params.get(1));
-
-					Row header = sheet.createRow(0);
+					CellStyle style = workbook.createCellStyle();
+					createComonInfo(workbook, sheet, style, (int)params.get(0));
+					Row header = sheet.createRow(10);
 
 					createRowHeaderTest(header, headerStyle);
 
-					CellStyle style = workbook.createCellStyle();
-					style.setWrapText(true);
+					// style.setWrapText(true);
 					createRowInfoTest(sheet, style, (int)params.get(0));
 
 				} else {
@@ -57,7 +58,7 @@ public class ExcelPOIView extends AbstractView {
 					createRowHeader(header, headerStyle);
 
 					CellStyle style = workbook.createCellStyle();
-					style.setWrapText(true);
+					// style.setWrapText(true);
 					createRowInfo(sheet, style, (int)params.get(0));
 				}
 			} else {
@@ -65,13 +66,12 @@ public class ExcelPOIView extends AbstractView {
 				for(Group groupOne : groups) {
 					if(params.size() == 3) {
 						Sheet sheet = getSheet(workbook, headerStyle, groupOne.getName());
-
-						Row header = sheet.createRow(0);
-
+						CellStyle style = workbook.createCellStyle();
+						Row header = sheet.createRow(10);
+						createComonInfo(workbook, sheet, style, groupOne.getId());
 						createRowHeaderTest(header, headerStyle);
 
-						CellStyle style = workbook.createCellStyle();
-						style.setWrapText(true);
+						// style.setWrapText(true);
 						createRowInfoTest(sheet, style, groupOne.getId());
 					} else {
 						Sheet sheet = getSheet(workbook, headerStyle, groupOne.getName());
@@ -81,7 +81,7 @@ public class ExcelPOIView extends AbstractView {
 						createRowHeader(header, headerStyle);
 
 						CellStyle style = workbook.createCellStyle();
-						style.setWrapText(true);
+						// style.setWrapText(true);
 
 						createRowInfo(sheet, style, groupOne.getId());
 					}
@@ -122,13 +122,88 @@ public class ExcelPOIView extends AbstractView {
 		ArrayList<Student> students = studentService.findAllByGroupId(groupId);
 		int size = students.size();
 		for(int i = 0; i < size; i++) {
-			Row row = sheet.createRow((i+1));
+			Row row = sheet.createRow((i+11));
 			for(int j = 0; j < 11; j++) {
 				Cell cell = row.createCell(j);
 				cell.setCellStyle(style);
 				insertDataTest(j, cell, i, students);
 			}
 		}
+	}
+	
+	public void createComonInfo(Workbook wb, Sheet sheet, CellStyle style, int groupId) {
+		XSSFFont font = ((XSSFWorkbook) wb).createFont();
+		font.setFontName("Calibri");
+		font.setBold(true);
+		
+		CellStyle headerStyle = wb.createCellStyle();
+		
+		headerStyle.setFont(font);
+		headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		headerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		Row row = sheet.createRow(0);
+		Cell cell = row.createCell(0);
+		cell.setCellStyle(headerStyle);
+		cell.setCellValue("ĐẠI HỌC ĐÀ NẴNG");
+		sheet.addMergedRegion(new CellRangeAddress(0,0,0,3));
+		cell = row.createCell(4);
+		cell.setCellStyle(headerStyle);
+		cell.setCellValue("CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM");
+		sheet.addMergedRegion(new CellRangeAddress(0,0,4,9));
+		
+		row = sheet.createRow(1);
+		cell = row.createCell(0);
+		cell.setCellStyle(headerStyle);
+		cell.setCellValue("TRƯỜNG ĐẠI HỌC BÁCH KHOA");
+		sheet.addMergedRegion(new CellRangeAddress(1,1,0,3));
+		cell = row.createCell(4);
+		cell.setCellStyle(headerStyle);
+		cell.setCellValue("Độc lập - Tự do - Hạnh phúc");
+		sheet.addMergedRegion(new CellRangeAddress(1,1,4,9));
+		
+		row = sheet.createRow(3);
+		cell = row.createCell(2);
+		cell.setCellStyle(headerStyle);
+		cell.setCellValue("BẢNG ĐIỂM TỔNG HỢP");
+		sheet.addMergedRegion(new CellRangeAddress(3,3,2,6));
+		
+		row = sheet.createRow(4);
+		cell = row.createCell(2);
+		cell.setCellStyle(headerStyle);
+		cell.setCellValue("Học kỳ 1	 năm học 2017 - 2018");
+		sheet.addMergedRegion(new CellRangeAddress(4,4,2,6));
+		
+		row = sheet.createRow(6);
+		cell = row.createCell(0);
+		cell.setCellStyle(style);
+		cell.setCellValue("LỚP:");
+		
+		cell = row.createCell(7);
+		cell.setCellStyle(style);
+		cell.setCellValue("GIẢNG VIÊN:");
+		
+		cell = row.createCell(2);
+		cell.setCellStyle(style);
+		sheet.addMergedRegion(new CellRangeAddress(6,6,2,6));
+		
+		cell = row.createCell(8);
+		cell.setCellStyle(style);
+		sheet.addMergedRegion(new CellRangeAddress(6,6,8,10));
+		
+		row = sheet.createRow(7);
+		cell = row.createCell(0);
+		cell.setCellStyle(style);
+		cell.setCellValue("HỌC PHẦN:");
+		
+		cell = row.createCell(2);
+		cell.setCellStyle(style);
+		sheet.addMergedRegion(new CellRangeAddress(7,7,2,6));
+		
+		row = sheet.createRow(8);
+		cell = row.createCell(0);
+		cell.setCellStyle(style);
+		cell.setCellValue("PHÒNG ĐÀO TẠO:");
 	}
 
 	public void insertData(int i, Cell cell, int count, ArrayList<Student> students) {
